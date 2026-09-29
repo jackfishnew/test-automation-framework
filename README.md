@@ -32,6 +32,7 @@ This repository demonstrates a complete automation pipeline for a SaaS product d
 
 - API behavior using OpenAPI/Swagger-driven property-based testing
 - End-to-end user flows using Selenium UI automation
+- Application performance under load using JMeter load testing
 - Test execution and reporting with Pytest and Allure
 - Local and remote execution in GitHub Codespaces or Dockerized environments
 
@@ -43,12 +44,15 @@ This repository demonstrates a complete automation pipeline for a SaaS product d
 | Selenium | UI automation | Automates browser interactions for E2E validation |
 | Schemathesis | API testing | Generates property-based API tests from OpenAPI specs |
 | Docker | Environment orchestration | Runs the app and dependencies in isolated containers |
+| JMeter | Load testing | Simulates user load and measures application performance under stress |
 | Allure | Reporting | Produces rich HTML reports for test outcomes |
+
 
 ## Test Scope
 
 - Property-based API testing using Schemathesis against the backend Swagger/OpenAPI schema
 - End-to-end UI validation for user journeys and critical flows
+- Load testing with JMeter to measure application performance and identify bottlenecks
 - CI-friendly execution with headless browser support and report generation
 - Visual debugging support using VNC for local and remote development workflows
 
@@ -67,8 +71,8 @@ Create a `.env` file in the project root with the following values(local setup)
 
 If you open this repository in a browser-accessible for example Codespace, the frontend and backend will be served under a proxy HTTPS hostname rather than `localhost`. 
 
-Ex: 
-local: http://127.0.0.1:8000
+Url example:  
+Local: http://127.0.0.1:8000  
 Codespace: https://<hash>-8000.app.github.dev
 :
 
@@ -148,7 +152,7 @@ docker compose -f docker-compose-pull.yml up -d
 python3 -m venv tests/venv
 source tests/venv/bin/activate
 pip install --upgrade pip
-pip install -r tests/requirements.txt
+pip install -r requirements.txt
 ```
 or use: __./scripts/setup_python_virtual_environment.sh__
 
@@ -192,7 +196,7 @@ Make sure your virtual environment is active before running the suite.
 ### Run all tests
 
 ```bash
-pytest -m "contract or api or ui or load"
+pytest -m "contract or api or ui"
 ```
 
 ### Run API tests only
