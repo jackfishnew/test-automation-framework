@@ -18,14 +18,14 @@ jobs:
       - name: Create .env file for Docker Compose
         run: |
           cat > .env << 'EOF'
-          SECRET_KEY=${{secrets.SECRET_KEY:-test_secret_1234567}}
-          BACKEND_HOST=${{vars.BACKEND_HOST:-http://localhost:8000}}
-          FRONTEND_HOST=${{vars.FRONTEND_HOST:-http://localhost:3000}}
-          ALLOWED_HOSTS=${{vars.ALLOWED_HOSTS:-localhost,127.0.0.1}}
-          DJANGO_ADMIN_USER=${{secrets.DJANGO_ADMIN_USER:-test_admin}}
-          DJANGO_ADMIN_EMAIL=${{secrets.DJANGO_ADMIN_EMAIL:-test_admin@local.local}}
-          DJANGO_ADMIN_PASSWORD=${{secrets.DJANGO_ADMIN_PASSWORD:-test_admin_pass_1234567 }}
-          REACT_APP_FRONTEND_HOST=${{vars.REACT_APP_FRONTEND_HOST:-http://localhost:3000}}
+          SECRET_KEY=${{ secrets.SECRET_KEY || 'test_secret_1234567' }}
+          BACKEND_HOST=${{ vars.BACKEND_HOST || 'http://localhost:8000' }}
+          FRONTEND_HOST=${{ vars.FRONTEND_HOST || 'http://localhost:3000' }}
+          ALLOWED_HOSTS=${{ vars.ALLOWED_HOSTS || 'localhost,127.0.0.1' }}
+          DJANGO_ADMIN_USER=${{ secrets.DJANGO_ADMIN_USER || 'test_admin' }}
+          DJANGO_ADMIN_EMAIL=${{ secrets.DJANGO_ADMIN_EMAIL || 'test_admin@local.local' }}
+          DJANGO_ADMIN_PASSWORD=${{ secrets.DJANGO_ADMIN_PASSWORD || 'test_admin_pass_1234567' }}
+          REACT_APP_FRONTEND_HOST=${{ vars.REACT_APP_FRONTEND_HOST || 'http://localhost:3000' }}
           EOF
       
       - name: Log in to GitHub Container Registry
@@ -76,13 +76,13 @@ jobs:
         continue-on-error: true
         run: pytest -m "api or ui" --mobile=false
         env:
-          TEST_API_ADMIN_USERNAME: ${{ secrets.DJANGO_ADMIN_USER:-test_admin }}
-          TEST_API_ADMIN_PASSWORD: ${{ secrets.DJANGO_ADMIN_PASSWORD:-test_admin_pass_1234567 }}
-          TEST_API_BASE_URL: ${{ vars.TEST_API_BASE_URL:-http://localhost:8000/}}
-          TEST_UI_BASE_URL: ${{ vars.TEST_UI_BASE_URL:-http://localhost:3000/}}
-          MAILPIT_HOST: ${{ vars.MAILPIT_HOST:-http://localhost:8025}}
-          UI_BROWSER: ${{ vars.UI_BROWSER:-chrome}}
-          UI_HEADLESS: ${{ vars.UI_HEADLESS:-true}}
+          TEST_API_ADMIN_USERNAME: ${{ secrets.DJANGO_ADMIN_USER || 'test_admin' }}
+          TEST_API_ADMIN_PASSWORD: ${{ secrets.DJANGO_ADMIN_PASSWORD || 'test_admin_pass_1234567' }}
+          TEST_API_BASE_URL: ${{ vars.TEST_API_BASE_URL || 'http://localhost:8000/' }}
+          TEST_UI_BASE_URL: ${{ vars.TEST_UI_BASE_URL || 'http://localhost:3000/' }}
+          MAILPIT_HOST: ${{ vars.MAILPIT_HOST || 'http://localhost:8025' }}
+          UI_BROWSER: ${{ vars.UI_BROWSER || 'chrome' }}
+          UI_HEADLESS: ${{ vars.UI_HEADLESS || 'true' }}
 
       - name: Generate Allure HTML Report
         if: always()
