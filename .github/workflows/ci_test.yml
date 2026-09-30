@@ -46,14 +46,14 @@ jobs:
           echo "Waiting for backend at: $TEST_API_BASE_URL"
           timeout 60 bash -c 'until curl -s "$TEST_API_BASE_URL" > /dev/null; do echo "Retrying..."; sleep 2; done' || (echo "Backend failed to start"; docker compose -f docker-compose-pull.yml logs backend; exit 1)
         env:
-          TEST_API_BASE_URL: ${{ vars.TEST_API_BASE_URL}}
+          TEST_API_BASE_URL: ${{ vars.TEST_API_BASE_URL || 'http://localhost:8000/'}}
 
       - name: Wait for Frontend to be ready
         run: |
           echo "Waiting for frontend at: $TEST_UI_BASE_URL"
           timeout 60 bash -c 'until curl -s "$TEST_UI_BASE_URL" > /dev/null; do echo "Retrying..."; sleep 2; done' || (echo "Frontend failed to start"; docker compose -f docker-compose-pull.yml logs frontend; exit 1)
         env:
-          TEST_UI_BASE_URL: ${{ vars.TEST_UI_BASE_URL}}
+          TEST_UI_BASE_URL: ${{ vars.TEST_UI_BASE_URL || 'http://localhost:3000/'}}
 
       - name: Wait for Mailpit to be ready
         run: |
