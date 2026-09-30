@@ -4,27 +4,40 @@ All automated test cases in this project are executed through a GitHub-based CI 
 
 A comprehensive QA automation suite for a containerized SaaS platform. This project combines black-box UI automation with API contract validation and test orchestration to provide end-to-end quality coverage for modern web applications.
 
-## Run in GitHub without installing locally
+## CI pipeline
+**Prerequisite:** To execute the tests, create a GitHub Actions secret called `GHCR_PAT` containing a token to pull the necessary Docker images.
 
-You can start and run this project directly in GitHub without installing dependencies on your machine:
+## Collaborate from a Codespace with a fork
 
-### Option 1: Use GitHub Codespaces
 
-1. Open the repository in GitHub.
-2. Click the `Code` button.
-3. Select `Codespaces` and create a new codespace.
-4. Once the environment is ready, the repository is already mounted in a preconfigured dev environment.
-5. Start the app and run the tests from the terminal inside the codespace.
+1. Fork the repository on GitHub.
+2. Open your fork in a GitHub Codespace.
+3. Create a branch:
 
-### Option 2: Use GitHub Actions
+```bash
+git checkout -b feature/my-change
+```
 
-1. Push your branch to GitHub.
-2. Open the repository's `Actions` tab.
-3. Select the workflow for test execution.
-4. Run the workflow manually or let it trigger automatically on pushes and pull requests.
-5. Review the test logs and artifacts directly in the GitHub UI.
+4. Make your changes, then commit and push:
 
-This approach is ideal for CI validation, remote collaboration, and environments where local setup is not required.
+```bash
+git add .
+git commit -m "Add my improvement"
+git push origin feature/my-change
+```
+
+5. Open a pull request from your fork on GitHub.
+6. Keep your fork updated:
+
+```bash
+git fetch upstream
+git rebase upstream/main
+git push origin main
+```
+
+
+
+This keeps the main repo clean while letting you work and review changes in a Codespace.
 
 ## Overview
 
