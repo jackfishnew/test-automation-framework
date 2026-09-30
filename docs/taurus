@@ -23,17 +23,17 @@ JMeter's raw data (kpi.jtl), and a consolidated execution summary (bzt.log).
 
 ---
 execution:
-# 1. JMeter Execution Block (Performance Testing)
-- executor: jmeter
-  concurrency: 50         # Number of concurrent virtual users
-  ramp-up: 30s            # Time to reach target concurrency
-  hold-for: 2m            # How long to sustain the load
-  scenario: jmeter-test
+  # 1. JMeter Execution Block (Performance Testing)
+  - executor: jmeter
+    concurrency: 50         # Number of concurrent virtual users
+    ramp-up: 30s            # Time to reach target concurrency
+    hold-for: 2m            # How long to sustain the load
+    scenario: jmeter-test
 
-# 2. Pytest Execution Block (Functional Testing)
-- executor: pytest
-  iterations: 1           # Perform 1 iteration over the test suite
-  scenario: pytest-test
+  # 2. Pytest Execution Block (Functional Testing)
+  - executor: pytest
+    iterations: 1           # Perform 1 iteration over the test suite
+    scenario: pytest-test
 
 scenarios:
   jmeter-test:
@@ -55,8 +55,6 @@ JMeter Properties (with defaults) for configuration routing, and OS Environment 
 You should completely avoid hardcoding environment URLs, thread counts,
 or passwords inside either the .jmx file or the test-suite.yml file.
 
-Here is the production standard breakdown of how to structure your parameters.
-
 
 
 ### Production-Ready Architecture Example
@@ -74,7 +72,8 @@ export TARGET_ENV="api.production.com"
 export VUSERS="1000"
 export DURATION="3600"
 
-bzt test-suite.yml
+bzt taurus_test_suite.yml
+bzt taurus_test_suite.yml --debug
 
 
 How to set it up:

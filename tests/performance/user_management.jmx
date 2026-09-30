@@ -45,7 +45,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="-1423461020">access</stringProp>
             </collectionProp>
@@ -68,7 +68,7 @@
           </JSONPostProcessor>
           <hashTree/>
         </hashTree>
-        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -105,7 +105,7 @@
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
-        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
           <collectionProp name="HeaderManager.headers">
             <elementProp name="" elementType="Header">
               <stringProp name="Header.name">Content-Type</stringProp>
@@ -114,7 +114,7 @@
           </collectionProp>
         </HeaderManager>
         <hashTree/>
-        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config">
           <stringProp name="delimiter">,</stringProp>
           <stringProp name="fileEncoding"></stringProp>
           <stringProp name="filename">/workspaces/test-automation-framework/tests/performance/data/jmeter_test_users.csv</stringProp>
@@ -131,17 +131,17 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="TARGET_PROTOCOL" elementType="Argument">
             <stringProp name="Argument.name">TARGET_PROTOCOL</stringProp>
-            <stringProp name="Argument.value">${__P(protocol, https)}</stringProp>
+            <stringProp name="Argument.value">${__P(protocol, http)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="TARGET_HOST" elementType="Argument">
             <stringProp name="Argument.name">TARGET_HOST</stringProp>
-            <stringProp name="Argument.value">${__P(host, glowing-capybara-5gp7jrg4jp9vcvxxq-8000.app.github.dev)}</stringProp>
+            <stringProp name="Argument.value">${__P(host, 127.0.0.1)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="TARGET_PORT_NR" elementType="Argument">
             <stringProp name="Argument.name">TARGET_PORT_NR</stringProp>
-            <stringProp name="Argument.value">${__P(port_nr,)}</stringProp>
+            <stringProp name="Argument.value">${__P(port_nr,8000)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="NUMBER_OF_THREADS" elementType="Argument">

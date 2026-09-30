@@ -1,37 +1,37 @@
 ---
 execution:
-# Create the test account and CSV data before starting JMeter.
-- executor: pytest
-  iterations: 1
-  scenario: prepare-jmeter-user
+  # Create the test account and CSV data before starting JMeter.
+  - executor: pytest
+    iterations: 1
+    scenario: prepare-jmeter-user
 
-# JMeter execution block (performance testing)
-- executor: jmeter
-  concurrency: 2         # Number of Threads (users)
-  ramp-up: 3s            # Ramp-up period (seconds)
-  #hold-for: 20s            # How long to sustain the load
-  scenario: jmeter-test
+  # JMeter execution block (performance testing)
+  - executor: jmeter
+    concurrency: 2         # Number of Threads (users)
+    ramp-up: 3s            # Ramp-up period (seconds)
+    hold-for: 10s            # How long to sustain the load
+    scenario: jmeter-test
+  
+  - executor: pytest
+    iterations: 1
+    scenario: remove-jmeter-user
 
 scenarios:
   prepare-jmeter-user:
-    script: /workspaces/test-automation-framework/tests/performance/test_technical_create_user.py
+    script: /workspaces/test-automation-framework/tests/performance/technical/test_technical_create_user.py
 
   jmeter-test:
-    # You can point to an existing JMeter .jmx file here...
     script: /workspaces/test-automation-framework/tests/performance/user_management.jmx
     properties:
       #host: ${TARGET_ENV}
       #threads: ${VUSERS}
       #duration: ${DURATION}
-      protocol: https
-      host: glowing-capybara-5gp7jrg4jp9vcvxxq-8000.app.github.dev
-      #port_nr:
-    # ...OR write HTTP requests directly in YAML without opening JMeter
-    # requests:
-    #  - url: http://example.com/api
+      protocol: http
+      host: 127.0.0.1
+      port_nr: 8000
 
-    prepare-jmeter-user:
-    script: /workspaces/test-automation-framework/tests/performance/test_technical_remove_user.py
+  remove-jmeter-user:
+    script: /workspaces/test-automation-framework/tests/performance/technical/test_technical_remove_user.py
 
 modules:
   local:
