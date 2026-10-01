@@ -7,8 +7,9 @@ from utility.emails import get_activation_token_from_email_body
 from utility.factories import make_user_data_abonament_basic
 import yaml
 
-DATA_TEST_USER_PATH =Path("/workspaces/test-automation-framework/tests/performance/data/jmeter_test_users.csv")
-TEST_SUITE_PATH = Path("/workspaces/test-automation-framework/tests/performance/taurus_test_suite.yml")
+BASE_DIR = Path(__file__).resolve().parent
+DATA_TEST_USER_PATH = BASE_DIR / "data" / "jmeter_test_users.csv"
+TEST_SUITE_PATH = BASE_DIR / "taurus_test_suite.yml"
 
 @pytest.fixture
 def jmeter_user_count():
@@ -28,7 +29,6 @@ def jmeter_new_user_accounts(api_client, jmeter_user_count):
     """Create the account consumed by the JMeter CSV data set."""
     created_users = []
     for cnt in range(jmeter_user_count):
-        
         user_data = make_user_data_abonament_basic()
         response = api_client.api_register_user(**user_data)
         assert response.status_code == 201, f"Failed to create user: {response.text}"
@@ -57,3 +57,4 @@ def jmeter_remove_user_accounts(auth_api_client_admin):
             assert response.status_code == 200, f"Failed to delete user: {response.text}"
     if csv_path.exists():
         csv_path.unlink()
+    assert not csv_path.exists()

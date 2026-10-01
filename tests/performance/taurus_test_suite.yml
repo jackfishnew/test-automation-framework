@@ -9,33 +9,30 @@ execution:
   - executor: jmeter
     concurrency: 2         # Number of Threads (users)
     ramp-up: 3s            # Ramp-up period (seconds)
-    hold-for: 10s            # How long to sustain the load
+    hold-for: 10s          # How long to sustain the load
     scenario: jmeter-test
-  
+
   - executor: pytest
     iterations: 1
     scenario: remove-jmeter-user
 
 scenarios:
   prepare-jmeter-user:
-    script: /workspaces/test-automation-framework/tests/performance/technical/test_technical_create_user.py
+    script: tests/performance/technical/test_technical_create_user.py
 
   jmeter-test:
-    script: /workspaces/test-automation-framework/tests/performance/user_management.jmx
+    script: tests/performance/user_management.jmx
     properties:
-      #host: ${TARGET_ENV}
-      #threads: ${VUSERS}
-      #duration: ${DURATION}
       protocol: http
       host: 127.0.0.1
       port_nr: 8000
 
   remove-jmeter-user:
-    script: /workspaces/test-automation-framework/tests/performance/technical/test_technical_remove_user.py
+    script: tests/performance/technical/test_technical_remove_user.py
 
 modules:
   local:
     sequential: true
   jmeter:
-    path: /workspaces/test-automation-framework/apache-jmeter-5.6.3/bin/jmeter
+    path: ${JMETER_HOME:-apache-jmeter-5.6.3/bin/jmeter}
 

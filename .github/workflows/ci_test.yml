@@ -72,9 +72,9 @@ jobs:
           pip install -r requirements.txt
 
       # Tests
-      - name: Run all tests (API and UI) Desktop
+      - name: Run Contract, API, UI tests
         continue-on-error: true
-        run: pytest -m "api or ui" --mobile=false
+        run: pytest -m "contract or api or ui" --mobile=false
         env:
           TEST_API_ADMIN_USERNAME: ${{ secrets.DJANGO_ADMIN_USER || 'test_admin' }}
           TEST_API_ADMIN_PASSWORD: ${{ secrets.DJANGO_ADMIN_PASSWORD || 'test_admin_pass_1234567' }}
@@ -99,20 +99,24 @@ jobs:
           path: allure-report/
           retention-days: 14 # Keeps the report for 14 days to save storage
 
-      # Load(Performance) tests
-      # - name: Set up JMeter
-      #   run: |
-      #     wget https://downloads.apache.org//jmeter/binaries/apache-jmeter-5.6.3.tgz
-      #     tar -xzf apache-jmeter-5.6.3.tgz
-      #     echo "$GITHUB_WORKSPACE/apache-jmeter-5.6.3/bin" >> $GITHUB_PATH
-      # - name: Run JMeter Test
-      #   run: |
-      #     apache-jmeter-5.6.3/bin/jmeter -n -t tests/performance/user_management.jmx -l results.jtl -Jserver_name=localhost -Jport_nr=8000
-      # - name: Generate JMeter HTML Report
-      #   run: |
-      #     apache-jmeter-5.6.3/bin/jmeter -g results.jtl -o jmeter-report
-      # - name: Upload JMeter Report Artifact
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: jmeter-report
-      #     path: jmeter-report/
+      - name: Set up JMeter
+        run: |
+          wget -q https://downloads.apache.org/jmeter/binaries/apache-jmeter-5.6.3.tgz
+          tar -xzf apache-jmeter-5.6.3.tgz
+          echo "$GITHUB_WORKSPACE/apache-jmeter-5.6.3/bin" >> "$GITHUB_PATH"
+          echo "JMETER_HOME=$GITHUB_WORKSPACE/apache-jmeter-5.6.3" >> "$GITHUB_ENV"
+
+      - name: JMeter load tests
+        env:
+          TEST_API_BASE_URL: ${{ vars.TEST_API_BASE_URL || 'http://localhost:8000/' }}
+          JMETER_CSV_PATH: ${{ github.workspace }}/tests/performance/data/jmeter_test_users.csv
+        run: |
+          python -m bzt -o settings.artifacts-dir="$GITHUB_WORKSPACE/jmeter-report" tests/performance/taurus_test_suite.yml
+
+      - name: Upload JMeter Report Artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jmeter-report
+          path: ${{ github.workspace }}/jmeter-report/
+          if-no-files-found: error
