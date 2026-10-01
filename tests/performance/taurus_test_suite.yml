@@ -34,5 +34,5 @@ modules:
   local:
     sequential: true
   jmeter:
-    path: ${JMETER_HOME:-apache-jmeter-5.6.3/bin/jmeter}
+    path: "apache-jmeter-5.6.3/bin/jmeter"
 
