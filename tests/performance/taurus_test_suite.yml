@@ -7,9 +7,12 @@ execution:
 
   # JMeter execution block (performance testing)
   - executor: jmeter
-    concurrency: ${VUSERS}         # Number of Threads (users)
-    ramp-up: ${RAMPUP}            # Ramp-up period (seconds)
-    hold-for: ${HOLDFOR}          # How long to sustain the load
+    #concurrency: ${VUSERS}         # Number of Threads (users)
+    #ramp-up: ${RAMPUP}            # Ramp-up period (seconds)
+    #hold-for: ${HOLDFOR}          # How long to sustain the load
+    concurrency: 2         # Number of Threads (users)
+    ramp-up: 3s            # Ramp-up period (seconds)
+    hold-for:  10s         # How long to sustain the load
     scenario: jmeter-test
 
   - executor: pytest
