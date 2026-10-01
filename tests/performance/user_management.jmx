@@ -22,7 +22,7 @@
         </elementProp>
       </ThreadGroup>
       <hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ApiToken">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ApiToken" enabled="true">
           <stringProp name="HTTPSampler.domain">${TARGET_HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${TARGET_PORT_NR}</stringProp>
           <stringProp name="HTTPSampler.protocol">${TARGET_PROTOCOL}</stringProp>
@@ -117,7 +117,7 @@
         <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config">
           <stringProp name="delimiter">,</stringProp>
           <stringProp name="fileEncoding"></stringProp>
-          <stringProp name="filename">${TEST_USER_CSV_PATH}</stringProp>
+          <stringProp name="filename">${__P(test_user_csv_path, /workspaces/test-automation-framework/tests/performance/data/jmeter_test_users.csv)}</stringProp>
           <boolProp name="ignoreFirstLine">false</boolProp>
           <boolProp name="quotedData">false</boolProp>
           <boolProp name="recycle">true</boolProp>
@@ -147,11 +147,6 @@
           <elementProp name="NUMBER_OF_THREADS" elementType="Argument">
             <stringProp name="Argument.name">NUMBER_OF_THREADS</stringProp>
             <stringProp name="Argument.value">${__P(threads_number)}</stringProp>
-            <stringProp name="Argument.metadata">=</stringProp>
-          </elementProp>
-          <elementProp name="TEST_USER_CSV_PATH" elementType="Argument">
-            <stringProp name="Argument.name">TEST_USER_CSV_PATH</stringProp>
-            <stringProp name="Argument.value">${__P(test_user_csv_path, /workspaces/test-automation-framework/tests/performance/data/jmeter_test_users.csv)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
