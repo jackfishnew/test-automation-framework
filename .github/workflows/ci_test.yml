@@ -108,8 +108,8 @@ jobs:
 
       - name: JMeter load tests
         env:
-          TEST_API_BASE_URL: ${{ vars.TEST_API_BASE_URL || 'http://localhost:8000/' }}
-          JMETER_CSV_PATH: ${{ github.workspace }}/tests/performance/data/jmeter_test_users.csv
+          #TEST_API_BASE_URL: ${{ vars.TEST_API_BASE_URL || 'http://localhost:8000/' }}
+          #JMETER_CSV_PATH: ${{ github.workspace }}/tests/performance/data/jmeter_test_users.csv
         run: |
           python -m bzt -o settings.artifacts-dir="$GITHUB_WORKSPACE/jmeter-report" tests/performance/taurus_test_suite.yml
 
