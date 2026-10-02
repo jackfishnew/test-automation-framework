@@ -28,6 +28,8 @@ def jmeter_user_count():
 def jmeter_new_user_accounts(api_client, jmeter_user_count):
     """Create the account consumed by the JMeter CSV data set."""
     created_users = []
+    csv_path = DATA_TEST_USER_PATH
+    csv_path.parent.mkdir(parents=True, exist_ok=True)
     for cnt in range(jmeter_user_count):
         user_data = make_user_data_abonament_basic()
         response = api_client.api_register_user(**user_data)
@@ -37,7 +39,6 @@ def jmeter_new_user_accounts(api_client, jmeter_user_count):
         response = api_client.api_activate_user(activation_token)
         assert response.status_code == 302, f"Failed to activate user: {response.text}"
 
-        csv_path = DATA_TEST_USER_PATH
         with csv_path.open(mode="a", newline="", encoding="utf-8") as csv_file:
             writer = csv.DictWriter(csv_file, fieldnames=("username", "password"))
             if cnt == 0:
@@ -51,6 +52,7 @@ def jmeter_new_user_accounts(api_client, jmeter_user_count):
 def jmeter_remove_user_accounts(auth_api_client_admin):
     # cleanup - remove user
     csv_path = DATA_TEST_USER_PATH
+    csv_path.parent.mkdir(parents=True, exist_ok=True)
     with csv_path.open(newline="", encoding="utf-8") as csv_file:
         for row in csv.DictReader(csv_file):
             response = auth_api_client_admin.api_delete_user(row["username"])
