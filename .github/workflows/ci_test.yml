@@ -115,7 +115,8 @@ jobs:
           TEST_USER_CSV_PATH: ${{ github.workspace }}/tests/performance/data/jmeter_test_users.csv
         run: |
           mkdir -p "$GITHUB_WORKSPACE/tests/performance/data"
-          python -m bzt -o settings.artifacts-dir="$GITHUB_WORKSPACE/jmeter-report" tests/performance/taurus_test_suite.yml
+          python -m bzt -o settings.artifacts-dir="$GITHUB_WORKSPACE/jmeter-report" scenarios.jmeter-test.properties.test_user_csv_path="$TEST_USER_CSV_PATH" tests/performance/taurus_test_suite.yml
+          python -m bzt -o 
 
       - name: Upload JMeter Report Artifact
         if: always()
