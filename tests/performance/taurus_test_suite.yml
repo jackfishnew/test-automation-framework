@@ -29,7 +29,7 @@ scenarios:
       protocol: http
       host: 127.0.0.1
       port_nr: 8000
-      test_user_csv_path: /tests/performance/data/jmeter_test_users.csv
+      test_user_csv_path: tests/performance/data/jmeter_test_users.csv
 
   remove-jmeter-user:
     script: tests/performance/technical/test_technical_remove_user.py
