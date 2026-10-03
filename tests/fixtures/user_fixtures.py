@@ -59,21 +59,31 @@ def clean_mailpit(pytestconfig: pytest.Config):
     clear_emails_mailpit(mailpit_host)
 
 @pytest.fixture(scope="function")
-def new_user_account(api_client, auth_api_client_admin, clean_mailpit):
-    """Create test user account """
+def registered_user(api_client):
+    """Register a new user (unactivated) - for contract tests and activation flows"""
     user_data = make_user_data_abonament_basic()
-    response = api_client.api_register_user(**user_data)  
-    # Ensure the registration was successful (201 Created)
-    assert response.status_code == 201, f"Failed to create user: {response.text}"
+    response = api_client.api_register_user(**user_data)
+    assert response.status_code == 201, f"Failed to register user: {response.text}"
+    return user_data
 
-    user_email = user_data.get("email")
-    # Get activation token from Email (mailpit)
+
+@pytest.fixture(scope="function")
+def activated_user(api_client, registered_user, clean_mailpit):
+    """Activate a registered user - transitions from unactivated to activated state"""
+    user_email = registered_user.get("email")
+    # Get activation token from Email (Mailpit)
     activation_token = get_activation_token_from_email_body(user_email)
     response = api_client.api_activate_user(activation_token)
     assert response.status_code == 302, f"Failed to activate user: {response.text}"
-    yield user_data
-    # cleanup - remove user
-    response = auth_api_client_admin.api_delete_user(user_email)
+    return registered_user
+
+
+@pytest.fixture(scope="function")
+def new_user_account(activated_user, auth_api_client_admin):
+    """Provides fully activated test user with automatic cleanup"""
+    yield activated_user
+    # Cleanup - remove user
+    response = auth_api_client_admin.api_delete_user(activated_user.get("email"))
     assert response.status_code == 200, f"Failed to delete user: {response.text}"
 
 

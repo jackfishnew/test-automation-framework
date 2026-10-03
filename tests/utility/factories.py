@@ -1,6 +1,7 @@
 import uuid
 from ui.constants import DEFAULT_DISPLAY_VIEWPORT, DEFAULT_MOBILE_VIEWPORT
 from api.api_clients.api_client_base import ApiClient, MockApiClient
+import schemathesis 
 
 def make_user_data_abonament_basic() -> dict:
     """Generate dynamic payload for user creation."""
@@ -18,3 +19,6 @@ def make_user_data_abonament_basic() -> dict:
 
 def make_display_size(mobile):
     return DEFAULT_MOBILE_VIEWPORT if mobile else DEFAULT_DISPLAY_VIEWPORT 
+
+def get_schema(api_url: str, method: str):
+    return schemathesis.pytest.from_fixture("api_schema").include(path=api_url, method=method)

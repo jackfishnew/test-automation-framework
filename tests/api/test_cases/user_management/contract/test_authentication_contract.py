@@ -1,33 +1,33 @@
 import pytest 
-import schemathesis
 import allure
-
-# Define and filter the schema at module level for test collection
-schema_user_management_token = (
-    schemathesis.pytest.from_fixture("api_schema")
-    .include(path="/api/user_management/token/", method="POST")
-)
-
-schema_user_management_token_refresh = (
-    schemathesis.pytest.from_fixture("api_schema")
-    .include(path="/api/user_management/token/refresh/", method="POST")
-)
-
+from utility.factories import get_schema
+from utility.emails import get_activation_token_from_email_body
+    
 
 @pytest.mark.contract
-@allure.epic("API Authentication & Onboarding")
-@allure.feature("User management")
-@allure.story("Schema contract is checked")
-class TestUserManagementContract:
+@allure.epic("User Management")
+@allure.feature("Authentication")
+@allure.story("As a Release Engineer,I want contract tests to validate API specifications before deployment,So that client integrations don't break due to unintended schema changes.")
+class TestAuthenticationContract:
 
-
-    @schema_user_management_token.parametrize()
-    def test_user_management_contract_token(self, case, api_base_url):
+    @get_schema("/api/user_management/token/refresh/", method="POST").parametrize()
+    def test_token_refresh_contract(self, case, api_base_url):
         case.call_and_validate(base_url=api_base_url)
 
-    @schema_user_management_token_refresh.parametrize()
-    def test_user_management_contract_token_refresh(self, case, api_base_url):
+    @get_schema("/api/user_management/token/", method="POST").parametrize()
+    def test_token_contract(self, case, api_base_url):
         case.call_and_validate(base_url=api_base_url)
+
+    @get_schema("/api/user_management/activate/{token}/", method="GET").parametrize()
+    def test_activate_contract(self, case, api_base_url, registered_user):
+        # Extract token from email
+        user_email = registered_user.get("email")
+        activation_token = get_activation_token_from_email_body(user_email)
+        
+        # Inject into path directly
+        case.path = case.path.replace("{token}", activation_token)
+        case.call_and_validate(base_url=api_base_url)
+
 
     # Chain filters to narrow down the test scope
     # filtered_schema = (
