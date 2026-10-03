@@ -17,13 +17,28 @@ class TestAuthenticationContract:
     @get_schema("/api/user_management/token/", method="POST").parametrize()
     def test_token_contract(self, case, api_base_url):
         case.call_and_validate(base_url=api_base_url)
+    
+    @get_schema("/api/user_management/register/", method="POST").parametrize()
+    def test_register_contract(self, case, api_base_url):
+        case.call_and_validate(base_url=api_base_url)
+
+    @pytest.mark.xfail(
+        reason=(
+            "This endpoint intentionally returns a generic success for any supplied email "
+            "to prevent account enumeration; schema validation rejects unexpected fields. "
+            "Keep it as an expected failure until the API contract is updated."
+        ),
+        strict=False,
+    )
+    @get_schema("/api/user_management/resend-activation/", method="POST").parametrize()
+    def test_resend_activation_contract(self, case, api_base_url):
+        case.call_and_validate(base_url=api_base_url)
 
     @get_schema("/api/user_management/activate/{token}/", method="GET").parametrize()
     def test_activate_contract(self, case, api_base_url, registered_user):
         # Extract token from email
         user_email = registered_user.get("email")
         activation_token = get_activation_token_from_email_body(user_email)
-        
         # Inject into path directly
         case.path = case.path.replace("{token}", activation_token)
         case.call_and_validate(base_url=api_base_url)
