@@ -280,12 +280,12 @@ The load test configuration requires the following parameters to be defined:
 - `hold-for`: duration for which the target load is sustained
 
 ```bash
-python tests/performance/update_jmeter_target.py
+pytest tests/performance/technical/test_technical_update_jmeter_target.py
 
 python -m bzt \
-  -o execution[1].concurrency="10" \
-  -o execution[1].ramp-up="20s" \
-  -o execution[1].hold-for="40s" \
+  -o execution.1.concurrency="10" \
+  -o execution.1.ramp-up="20s" \
+  -o execution.1.hold-for="40s" \
   tests/performance/taurus_test_suite.yml
 ```
 
