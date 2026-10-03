@@ -2,7 +2,7 @@ import pytest
 from pathlib import Path
 import os
 import platform
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlsplit
 
 from functools import lru_cache
 from selenium import webdriver
@@ -127,3 +127,28 @@ def build_firefox_driver(headless: bool, width, length) -> webdriver.Firefox:
     # options.binary_location = "/path/to/firefox/executable"
 
     return webdriver.Firefox(service=service, options=options)
+
+def resolve_jmeter_target(api_url: str) -> tuple[str, str, str]:
+    """Normalize an API URL into protocol, host and port values for JMeter.
+
+    GitHub Codespaces proxy URLs like https://<hash>-8000.app.github.dev do not expose
+    an explicit port in the host, so it should remain empty instead of being forced to 443.
+    """
+    value = (api_url or "").strip().rstrip("/")
+    if not value:
+        return "http", "localhost", "80"
+
+    parsed = urlsplit(value if "://" in value else f"http://{value}")
+    protocol = parsed.scheme or "http"
+    host = parsed.hostname or "localhost"
+
+    if parsed.port is not None:
+        port = str(parsed.port)
+    elif host.endswith(".app.github.dev"):
+        port = ""
+    elif protocol == "http":
+        port = "80"
+    else:
+        port = ""
+
+    return protocol, host, port

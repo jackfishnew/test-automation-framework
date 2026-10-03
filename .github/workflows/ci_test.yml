@@ -115,10 +115,17 @@ jobs:
           TEST_USER_CSV_PATH: ${{ github.workspace }}/tests/performance/data/jmeter_test_users.csv
         run: |
           mkdir -p "$GITHUB_WORKSPACE/tests/performance/data"
-          touch "$TEST_USER_CSV_PATH" 
+          touch "$TEST_USER_CSV_PATH"
+
+          export PYTHONPATH="$GITHUB_WORKSPACE/tests:$PYTHONPATH"
+          python tests/performance/update_jmeter_target.py
+
           python -m bzt \
             -o settings.artifacts-dir="$GITHUB_WORKSPACE/jmeter-report" \
             -o scenarios.jmeter-test.properties.test_user_csv_path="$TEST_USER_CSV_PATH" \
+            -o execution[1].concurrency="$VUSERS" \
+            -o execution[1].ramp-up="$RAMPUP" \
+            -o execution[1].hold-for="$HOLDFOR" \
             tests/performance/taurus_test_suite.yml
 
       - name: Upload JMeter Report Artifact

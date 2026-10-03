@@ -1,28 +1,18 @@
----
 execution:
-  # Create the test account and CSV data before starting JMeter.
-  - executor: pytest
-    iterations: 1
-    scenario: prepare-jmeter-user
-
-  # JMeter execution block (performance testing)
-  - executor: jmeter
-    #concurrency: ${VUSERS}         # Number of Threads (users)
-    #ramp-up: ${RAMPUP}            # Ramp-up period (seconds)
-    #hold-for: ${HOLDFOR}          # How long to sustain the load
-    concurrency: 2         # Number of Threads (users)
-    ramp-up: 3s            # Ramp-up period (seconds)
-    hold-for:  10s         # How long to sustain the load
-    scenario: jmeter-test
-
-  - executor: pytest
-    iterations: 1
-    scenario: remove-jmeter-user
-
+- executor: pytest
+  iterations: 1
+  scenario: prepare-jmeter-user
+- executor: jmeter
+  concurrency: 2
+  ramp-up: 3s
+  hold-for: 10s
+  scenario: jmeter-test
+- executor: pytest
+  iterations: 1
+  scenario: remove-jmeter-user
 scenarios:
   prepare-jmeter-user:
     script: tests/performance/technical/test_technical_create_user.py
-
   jmeter-test:
     script: tests/performance/user_management.jmx
     properties:
@@ -30,13 +20,10 @@ scenarios:
       host: 127.0.0.1
       port_nr: 8000
       test_user_csv_path: tests/performance/data/jmeter_test_users.csv
-
   remove-jmeter-user:
     script: tests/performance/technical/test_technical_remove_user.py
-
 modules:
   local:
     sequential: true
   jmeter:
-    path: "apache-jmeter-5.6.3/bin/jmeter"
-
+    path: apache-jmeter-5.6.3/bin/jmeter
