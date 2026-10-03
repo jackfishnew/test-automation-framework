@@ -246,7 +246,7 @@ pytest -m "ui"
 
 ### Test Reporting with Allure
 
-Test results are stored in `tests/allure-results`.
+Test results are stored in `tests/allure-report`.
 
 Install Allure CLI:
 
@@ -258,14 +258,14 @@ or use: __./scripts/install_allure.sh__
 View the report locally:
 
 ```bash
-allure serve tests/allure-results
+allure serve tests/allure-report
 ```
 or use: __./scripts/view_allure_results_local.sh__
 
 Generate a static report on a remote or Codespace environment:
 
 ```bash
-allure generate tests/allure-results -o allure-report --clean
+allure generate tests/allure-report -o allure-report --clean
 python3 -m http.server 8001 --directory allure-report
 ```
 or use: __./scripts/view_allure_results_remote.sh__
@@ -283,8 +283,9 @@ The load test configuration requires the following parameters to be defined:
 pytest tests/performance/technical/test_technical_update_jmeter_target.py
 
 python -m bzt \
-  -o execution.1.concurrency="10" \
-  -o execution.1.ramp-up="20s" \
+  -o settings.artifacts-dir="tests/jmeter-report" \
+  -o execution.1.concurrency="4" \
+  -o execution.1.ramp-up="10s" \
   -o execution.1.hold-for="40s" \
   tests/performance/taurus_test_suite.yml
 ```
@@ -292,9 +293,12 @@ python -m bzt \
 ## Test Reporting JMeter
 
 ```bash
-python3 -m http.server 8001 --directory ./tests/performance/report
+apache-jmeter-5.6.3/bin/jmeter -g "tests/jmeter-report/kpi.jtl" -o tests/jmeter-report/html
+python3 -m http.server 8001 --directory ./tests/jmeter-report
 ```
 or use: __./scripts/report_jmeter.sh__
+
+then open  http://localhost:8001/html/index.html
 
 
 ## Visual Debugging with VNC
