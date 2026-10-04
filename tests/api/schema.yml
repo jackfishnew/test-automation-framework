@@ -1,0 +1,5192 @@
+openapi: 3.0.3
+info:
+  title: Klubster API
+  version: 1.0.0
+  description: Backend REST API for Klubster project
+paths:
+  /api/aktualnosci/threads/:
+    get:
+      operationId: aktualnosci_threads_list
+      summary: List threads
+      tags:
+      - News
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AktualnosciThread'
+          description: ''
+        '403':
+          description: Missing permissions.
+    post:
+      operationId: aktualnosci_threads_create
+      summary: Create thread
+      tags:
+      - News
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AktualnosciThreadUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AktualnosciThreadUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AktualnosciThreadUpdateRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AktualnosciThread'
+          description: ''
+        '400':
+          description: Validation error.
+        '403':
+          description: Missing permissions.
+  /api/aktualnosci/threads/{thread_id}/:
+    patch:
+      operationId: aktualnosci_threads_partial_update
+      summary: Update thread
+      parameters:
+      - in: path
+        name: thread_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - News
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedAktualnosciThreadUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedAktualnosciThreadUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedAktualnosciThreadUpdateRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AktualnosciThread'
+          description: ''
+        '404':
+          description: Thread not found.
+        '403':
+          description: Missing permissions.
+  /api/aktualnosci/threads/{thread_id}/comments/:
+    post:
+      operationId: aktualnosci_threads_comments_create
+      summary: Add thread comment
+      parameters:
+      - in: path
+        name: thread_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - News
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AktualnosciCommentCreateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AktualnosciCommentCreateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AktualnosciCommentCreateRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AktualnosciComment'
+          description: ''
+        '404':
+          description: Thread not found.
+        '403':
+          description: Missing permissions.
+  /api/club-calendar/events/:
+    get:
+      operationId: club_calendar_events_list
+      summary: List club calendar events
+      tags:
+      - Club Calendar
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClubCalendarEvent'
+          description: ''
+        '403':
+          description: Missing permissions.
+        '500':
+          description: Internal server error.
+    post:
+      operationId: club_calendar_events_create
+      summary: Create club calendar event
+      tags:
+      - Club Calendar
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClubCalendarEventRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClubCalendarEventRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClubCalendarEventRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubCalendarEvent'
+          description: ''
+        '400':
+          description: Validation error.
+        '403':
+          description: Missing permissions.
+        '500':
+          description: Internal server error.
+  /api/club-calendar/events/{event_id}/:
+    patch:
+      operationId: club_calendar_events_partial_update
+      summary: Update club calendar event
+      parameters:
+      - in: path
+        name: event_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Club Calendar
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedClubCalendarEventRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedClubCalendarEventRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedClubCalendarEventRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubCalendarEvent'
+          description: ''
+        '400':
+          description: Validation error.
+        '403':
+          description: Missing permissions.
+        '404':
+          description: Event not found.
+        '500':
+          description: Internal server error.
+    delete:
+      operationId: club_calendar_events_destroy
+      summary: Delete club calendar event
+      parameters:
+      - in: path
+        name: event_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Club Calendar
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: Event deleted.
+        '403':
+          description: Missing permissions.
+        '404':
+          description: Event not found.
+        '500':
+          description: Internal server error.
+  /api/club/members/:
+    get:
+      operationId: list_club_members
+      summary: List members
+      tags:
+      - Club
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Member'
+          description: ''
+        '404':
+          description: Member not found.
+  /api/club/members/{member_id}/:
+    get:
+      operationId: get_club_member
+      summary: Get specific member by ID
+      parameters:
+      - in: path
+        name: member_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Club
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Member'
+          description: ''
+        '404':
+          description: Member not found.
+  /api/club/members/add/:
+    post:
+      operationId: create_club_member
+      summary: Create member
+      tags:
+      - Club
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemberRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MemberRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MemberRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Member'
+          description: ''
+        '400':
+          description: Validation error.
+  /api/club/members/delete/{member_id}/:
+    delete:
+      operationId: club_members_delete_destroy
+      summary: Delete member
+      parameters:
+      - in: path
+        name: member_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Club
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: Member deleted.
+        '404':
+          description: Member not found.
+  /api/club/members/update/{member_id}/:
+    patch:
+      operationId: club_members_update_partial_update
+      summary: Update member
+      parameters:
+      - in: path
+        name: member_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Club
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedMemberRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedMemberRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedMemberRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Member'
+          description: ''
+        '400':
+          description: Validation error.
+        '404':
+          description: Member not found.
+  /api/club/permissions/:
+    get:
+      operationId: club_permissions_list
+      summary: List permissions
+      tags:
+      - Club
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Permission'
+          description: ''
+  /api/club/profile/:
+    get:
+      operationId: club_profile_retrieve
+      summary: Get club profile
+      tags:
+      - Club
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubProfile'
+          description: ''
+    patch:
+      operationId: club_profile_partial_update
+      summary: Update club profile
+      tags:
+      - Club
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedClubProfileRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedClubProfileRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubProfile'
+          description: ''
+        '400':
+          description: Validation error.
+  /api/club/profile/photos/{photo_id}/:
+    patch:
+      operationId: club_profile_photos_partial_update
+      summary: Update club photo
+      parameters:
+      - in: path
+        name: photo_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Club
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedClubPhotoRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedClubPhotoRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedClubPhotoRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubPhoto'
+          description: ''
+        '404':
+          description: Photo not found.
+    delete:
+      operationId: club_profile_photos_destroy
+      summary: Delete club photo
+      parameters:
+      - in: path
+        name: photo_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Club
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: Photo deleted.
+        '404':
+          description: Photo not found.
+  /api/club/profile/update/:
+    get:
+      operationId: club_profile_update_retrieve
+      summary: Get club profile
+      tags:
+      - Club
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubProfile'
+          description: ''
+    patch:
+      operationId: club_profile_update_partial_update
+      summary: Update club profile
+      tags:
+      - Club
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedClubProfileRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedClubProfileRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubProfile'
+          description: ''
+        '400':
+          description: Validation error.
+  /api/club/roles/:
+    get:
+      operationId: club_roles_list
+      summary: List roles
+      tags:
+      - Club
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Role'
+          description: ''
+  /api/emails/{id}/:
+    get:
+      operationId: emails_retrieve
+      summary: Get email thread detail
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Emails
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Email'
+          description: ''
+        '404':
+          description: Message not found.
+  /api/emails/{id}/status/:
+    post:
+      operationId: emails_status_create
+      summary: Change message status
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Emails
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                action:
+                  type: string
+                  enum:
+                  - mark_as_read
+                  - mark_as_unread
+                  - star
+                  - unstar
+                  - delete
+                  - restore
+                  - mark_as_draft
+                  - mark_as_sent
+                  - archive
+                  - unarchive
+                  example: mark_as_read
+              required:
+              - action
+              additionalProperties: false
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: Status changed.
+        '400':
+          description: Invalid action.
+  /api/emails/create:
+    post:
+      operationId: emails_create_create
+      summary: Send email
+      tags:
+      - Emails
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EmailRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EmailRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: Email sent successfully.
+        '400':
+          description: Validation error.
+  /api/emails/deleted:
+    get:
+      operationId: emails_deleted_list
+      summary: Get deleted messages
+      tags:
+      - Emails
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Email'
+          description: ''
+  /api/emails/draft:
+    post:
+      operationId: emails_draft_create
+      summary: Create draft
+      tags:
+      - Emails
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DraftEmailRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DraftEmailRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: Draft saved.
+        '400':
+          description: Validation error.
+    patch:
+      operationId: emails_draft_partial_update
+      summary: Update draft
+      tags:
+      - Emails
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedDraftEmailRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedDraftEmailRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: Draft updated.
+        '400':
+          description: Validation error.
+    delete:
+      operationId: emails_draft_destroy
+      summary: Delete draft
+      tags:
+      - Emails
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: Draft deleted.
+  /api/emails/draft/{id}/:
+    post:
+      operationId: emails_draft_create_2
+      summary: Create draft
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Emails
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DraftEmailRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DraftEmailRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: Draft saved.
+        '400':
+          description: Validation error.
+    patch:
+      operationId: emails_draft_partial_update_2
+      summary: Update draft
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Emails
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedDraftEmailRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedDraftEmailRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: Draft updated.
+        '400':
+          description: Validation error.
+    delete:
+      operationId: emails_draft_destroy_2
+      summary: Delete draft
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Emails
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: Draft deleted.
+  /api/emails/drafts:
+    get:
+      operationId: emails_drafts_list
+      summary: List drafts
+      tags:
+      - Emails
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DraftEmail'
+          description: ''
+        '500':
+          description: Internal server error.
+  /api/emails/inbox:
+    get:
+      operationId: emails_inbox_list
+      summary: Get inbox threads
+      tags:
+      - Emails
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Email'
+          description: ''
+  /api/emails/outbox:
+    get:
+      operationId: emails_outbox_list
+      summary: Get outbox threads
+      tags:
+      - Emails
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Email'
+          description: ''
+  /api/emails/starred:
+    get:
+      operationId: emails_starred_list
+      summary: Get starred messages
+      tags:
+      - Emails
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Email'
+          description: ''
+  /api/payments-management/training-payments/:
+    get:
+      operationId: payments_management_training_payments_retrieve
+      summary: List training payments overview
+      tags:
+      - Payments Management
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+          description: ''
+        '403':
+          description: Missing permissions.
+        '500':
+          description: Internal server error.
+  /api/payments-management/training-payments/mark-paid/:
+    post:
+      operationId: payments_management_training_payments_mark_paid_create
+      summary: Mark payment as paid
+      tags:
+      - Payments Management
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                child_id:
+                  type: integer
+                  example: 10
+                group_id:
+                  type: integer
+                  example: 5
+                month:
+                  type: string
+                  example: 2026-07
+                  description: YYYY-MM
+              required:
+              - child_id
+              - month
+              additionalProperties: false
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: Payment marked as paid.
+        '400':
+          description: Validation error.
+        '403':
+          description: Missing permissions.
+        '404':
+          description: Child not found.
+        '500':
+          description: Internal server error.
+  /api/schema/:
+    get:
+      operationId: schema_retrieve
+      description: |-
+        OpenApi3 schema for this API. Format can be selected via content negotiation.
+
+        - YAML: application/vnd.oai.openapi
+        - JSON: application/vnd.oai.openapi+json
+      parameters:
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - json
+          - yaml
+      - in: query
+        name: lang
+        schema:
+          type: string
+          enum:
+          - af
+          - ar
+          - ar-dz
+          - ast
+          - az
+          - be
+          - bg
+          - bn
+          - br
+          - bs
+          - ca
+          - ckb
+          - cs
+          - cy
+          - da
+          - de
+          - dsb
+          - el
+          - en
+          - en-au
+          - en-gb
+          - eo
+          - es
+          - es-ar
+          - es-co
+          - es-mx
+          - es-ni
+          - es-ve
+          - et
+          - eu
+          - fa
+          - fi
+          - fr
+          - fy
+          - ga
+          - gd
+          - gl
+          - he
+          - hi
+          - hr
+          - hsb
+          - ht
+          - hu
+          - hy
+          - ia
+          - id
+          - ig
+          - io
+          - is
+          - it
+          - ja
+          - ka
+          - kab
+          - kk
+          - km
+          - kn
+          - ko
+          - ky
+          - lb
+          - lt
+          - lv
+          - mk
+          - ml
+          - mn
+          - mr
+          - ms
+          - my
+          - nb
+          - ne
+          - nl
+          - nn
+          - os
+          - pa
+          - pl
+          - pt
+          - pt-br
+          - ro
+          - ru
+          - sk
+          - sl
+          - sq
+          - sr
+          - sr-latn
+          - sv
+          - sw
+          - ta
+          - te
+          - tg
+          - th
+          - tk
+          - tr
+          - tt
+          - udm
+          - ug
+          - uk
+          - ur
+          - uz
+          - vi
+          - zh-hans
+          - zh-hant
+      tags:
+      - schema
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/vnd.oai.openapi:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/yaml:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/vnd.oai.openapi+json:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/sports-objects/:
+    get:
+      operationId: sports_objects_list
+      summary: List sport objects
+      tags:
+      - Sports Objects
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SportObject'
+          description: ''
+    post:
+      operationId: sports_objects_create
+      summary: Create sport object
+      tags:
+      - Sports Objects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SportObjectRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SportObjectRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SportObjectRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SportObject'
+          description: ''
+        '400':
+          description: Validation error.
+  /api/sports-objects/{object_id}/:
+    get:
+      operationId: sports_objects_retrieve
+      summary: Get sport object
+      parameters:
+      - in: path
+        name: object_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Sports Objects
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SportObject'
+          description: ''
+        '404':
+          description: Object not found.
+    patch:
+      operationId: sports_objects_partial_update
+      summary: Update sport object
+      parameters:
+      - in: path
+        name: object_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Sports Objects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSportObjectRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSportObjectRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSportObjectRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SportObject'
+          description: ''
+        '400':
+          description: Validation error.
+        '404':
+          description: Object not found.
+    delete:
+      operationId: sports_objects_destroy
+      summary: Delete sport object
+      parameters:
+      - in: path
+        name: object_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Sports Objects
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: Object deleted with related data.
+        '404':
+          description: Object not found.
+  /api/sports-objects/{object_id}/extras/:
+    get:
+      operationId: sports_objects_extras_list
+      summary: List extras
+      parameters:
+      - in: path
+        name: object_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Sports Objects
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SportObjectExtra'
+          description: ''
+        '404':
+          description: Object not found.
+    post:
+      operationId: sports_objects_extras_create
+      summary: Create extra
+      parameters:
+      - in: path
+        name: object_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Sports Objects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SportObjectExtraRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SportObjectExtraRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SportObjectExtraRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SportObjectExtra'
+          description: ''
+        '400':
+          description: Validation error.
+        '404':
+          description: Object not found.
+  /api/sports-objects/{object_id}/extras/{extra_id}/:
+    patch:
+      operationId: sports_objects_extras_partial_update
+      summary: Update extra
+      parameters:
+      - in: path
+        name: extra_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: object_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Sports Objects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSportObjectExtraRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSportObjectExtraRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSportObjectExtraRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SportObjectExtra'
+          description: ''
+        '404':
+          description: Extra not found.
+    delete:
+      operationId: sports_objects_extras_destroy
+      summary: Delete extra
+      parameters:
+      - in: path
+        name: extra_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: object_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Sports Objects
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: Extra deleted.
+        '404':
+          description: Extra not found.
+  /api/sports-objects/{object_id}/photos/{photo_id}/:
+    patch:
+      operationId: sports_objects_photos_partial_update
+      summary: Update photo
+      parameters:
+      - in: path
+        name: object_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: photo_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Sports Objects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSportObjectPhotoRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSportObjectPhotoRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSportObjectPhotoRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SportObjectPhoto'
+          description: ''
+        '404':
+          description: Photo not found.
+    delete:
+      operationId: sports_objects_photos_destroy
+      summary: Delete photo
+      parameters:
+      - in: path
+        name: object_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: photo_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Sports Objects
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: Photo deleted.
+        '404':
+          description: Photo not found.
+  /api/sports-objects/{object_id}/prices/:
+    get:
+      operationId: sports_objects_prices_list
+      summary: List prices
+      parameters:
+      - in: path
+        name: object_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Sports Objects
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SportObjectPrice'
+          description: ''
+        '404':
+          description: Object not found.
+    post:
+      operationId: sports_objects_prices_create
+      summary: Create price
+      parameters:
+      - in: path
+        name: object_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Sports Objects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SportObjectPriceRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SportObjectPriceRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SportObjectPriceRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SportObjectPrice'
+          description: ''
+        '400':
+          description: Validation error.
+        '404':
+          description: Object not found.
+  /api/sports-objects/{object_id}/prices/{price_id}/:
+    patch:
+      operationId: sports_objects_prices_partial_update
+      summary: Update price
+      parameters:
+      - in: path
+        name: object_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: price_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Sports Objects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSportObjectPriceRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSportObjectPriceRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSportObjectPriceRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SportObjectPrice'
+          description: ''
+        '404':
+          description: Price not found.
+    delete:
+      operationId: sports_objects_prices_destroy
+      summary: Delete price
+      parameters:
+      - in: path
+        name: object_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: price_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Sports Objects
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: Price deleted.
+        '404':
+          description: Price not found.
+  /api/sports-objects/{object_id}/special-days/:
+    get:
+      operationId: sports_objects_special_days_list
+      summary: List special days
+      parameters:
+      - in: path
+        name: object_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Sports Objects
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SportObjectSpecialDay'
+          description: ''
+        '404':
+          description: Object not found.
+    post:
+      operationId: sports_objects_special_days_create
+      summary: Create special day
+      parameters:
+      - in: path
+        name: object_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Sports Objects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SportObjectSpecialDayRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SportObjectSpecialDayRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SportObjectSpecialDayRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SportObjectSpecialDay'
+          description: ''
+        '400':
+          description: Validation error.
+        '404':
+          description: Object not found.
+  /api/sports-objects/{object_id}/special-days/{special_day_id}/:
+    patch:
+      operationId: sports_objects_special_days_partial_update
+      summary: Update special day
+      parameters:
+      - in: path
+        name: object_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: special_day_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Sports Objects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSportObjectSpecialDayRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSportObjectSpecialDayRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSportObjectSpecialDayRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SportObjectSpecialDay'
+          description: ''
+        '404':
+          description: Special day not found.
+    delete:
+      operationId: sports_objects_special_days_destroy
+      summary: Delete special day
+      parameters:
+      - in: path
+        name: object_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: special_day_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Sports Objects
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: Special day deleted.
+        '404':
+          description: Special day not found.
+  /api/sports-reservations/:
+    get:
+      operationId: sports_reservations_list
+      description: Returns reservations from the current user club.
+      summary: List sport object reservations
+      tags:
+      - Sports Reservations
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SportObjectReservation'
+          description: ''
+        '403':
+          description: Reservation list is not available for child-linked profiles.
+        '500':
+          description: Internal server error.
+    post:
+      operationId: sports_reservations_create
+      description: Creates a reservation in current user club. Optional send_confirmation_email
+        flag controls notification sending.
+      summary: Create sport object reservation
+      tags:
+      - Sports Reservations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sport_object:
+                  type: integer
+                  example: 1
+                start_time:
+                  type: string
+                  format: date-time
+                  example: '2026-07-07T10:00:00Z'
+                end_time:
+                  type: string
+                  format: date-time
+                  example: '2026-07-07T11:00:00Z'
+                title:
+                  type: string
+                  example: Morning training reservation
+                notes:
+                  type: string
+                  example: Optional details
+                status:
+                  type: string
+                  example: booked
+                send_confirmation_email:
+                  type: boolean
+                  example: true
+              required:
+              - sport_object
+              - start_time
+              - end_time
+              additionalProperties: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SportObjectReservation'
+          description: ''
+        '400':
+          description: Validation error.
+        '403':
+          description: Reservation is forbidden for this profile or club.
+        '500':
+          description: Internal server error.
+  /api/sports-reservations/{reservation_id}/:
+    get:
+      operationId: sports_reservations_retrieve
+      description: Returns reservation details for current user club.
+      summary: Get reservation details
+      parameters:
+      - in: path
+        name: reservation_id
+        schema:
+          type: integer
+        description: Reservation id.
+        required: true
+      tags:
+      - Sports Reservations
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SportObjectReservation'
+          description: ''
+        '403':
+          description: Reservation details are not available for child-linked profiles.
+        '404':
+          description: Reservation not found.
+        '500':
+          description: Internal server error.
+    patch:
+      operationId: sports_reservations_partial_update
+      description: Updates reservation. If status is set to cancelled, linked training
+        events are removed and reservation is deleted.
+      summary: Update reservation
+      parameters:
+      - in: path
+        name: reservation_id
+        schema:
+          type: integer
+        description: Reservation id.
+        required: true
+      tags:
+      - Sports Reservations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sport_object:
+                  type: integer
+                  example: 1
+                start_time:
+                  type: string
+                  format: date-time
+                  example: '2026-07-07T10:00:00Z'
+                end_time:
+                  type: string
+                  format: date-time
+                  example: '2026-07-07T11:00:00Z'
+                title:
+                  type: string
+                  example: Updated reservation
+                notes:
+                  type: string
+                  example: Updated notes
+                status:
+                  type: string
+                  example: cancelled
+                send_cancellation_email:
+                  type: boolean
+                  example: true
+              additionalProperties: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: Reservation updated or cancelled/deleted successfully.
+        '400':
+          description: Validation error.
+        '403':
+          description: Sport object does not belong to your club.
+        '404':
+          description: Reservation not found.
+        '500':
+          description: Internal server error.
+    delete:
+      operationId: sports_reservations_destroy
+      description: Deletes reservation, sends cancellation email, and removes linked
+        training events.
+      summary: Delete reservation
+      parameters:
+      - in: path
+        name: reservation_id
+        schema:
+          type: integer
+        description: Reservation id.
+        required: true
+      tags:
+      - Sports Reservations
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: Reservation and linked training events deleted.
+        '404':
+          description: Reservation not found.
+        '500':
+          description: Internal server error.
+  /api/szkolenia/calendar-events/:
+    get:
+      operationId: szkolenia_calendar_events_list
+      summary: List training calendar events
+      tags:
+      - Training
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TrainingCalendarEvent'
+          description: ''
+    post:
+      operationId: szkolenia_calendar_events_create
+      summary: Create training calendar event
+      tags:
+      - Training
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrainingCalendarEventRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TrainingCalendarEventRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TrainingCalendarEventRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingCalendarEvent'
+          description: ''
+  /api/szkolenia/calendar-events/{item_id}/:
+    patch:
+      operationId: szkolenia_calendar_events_partial_update
+      summary: Update training calendar event
+      parameters:
+      - in: path
+        name: item_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Training
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTrainingCalendarEventRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedTrainingCalendarEventRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedTrainingCalendarEventRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingCalendarEvent'
+          description: ''
+        '404':
+          description: Object not found.
+    delete:
+      operationId: szkolenia_calendar_events_destroy
+      summary: Delete training calendar event
+      parameters:
+      - in: path
+        name: item_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Training
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: Event and linked reservation data deleted.
+        '404':
+          description: Object not found.
+  /api/szkolenia/coaches/:
+    get:
+      operationId: szkolenia_coaches_list
+      description: Returns club members with coach role.
+      summary: List coaches
+      tags:
+      - Training
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TrainingMember'
+          description: ''
+    post:
+      operationId: szkolenia_coaches_create
+      summary: Create coach (not allowed)
+      tags:
+      - Training
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrainingMemberRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TrainingMemberRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TrainingMemberRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '405':
+          description: Coaches are managed in club members module.
+  /api/szkolenia/coaches/{item_id}/:
+    patch:
+      operationId: szkolenia_coaches_partial_update
+      summary: Update coach (not allowed)
+      parameters:
+      - in: path
+        name: item_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Training
+      security:
+      - jwtAuth: []
+      responses:
+        '405':
+          description: Editing coaches is not supported on this endpoint.
+    delete:
+      operationId: szkolenia_coaches_destroy
+      summary: Delete coach (not allowed)
+      parameters:
+      - in: path
+        name: item_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Training
+      security:
+      - jwtAuth: []
+      responses:
+        '405':
+          description: Deleting coaches is not supported on this endpoint.
+  /api/szkolenia/groups/:
+    get:
+      operationId: szkolenia_groups_list
+      summary: List training groups
+      tags:
+      - Training
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TrainingGroup'
+          description: ''
+    post:
+      operationId: szkolenia_groups_create
+      summary: Create training group
+      tags:
+      - Training
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrainingGroupRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TrainingGroupRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TrainingGroupRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingGroup'
+          description: ''
+  /api/szkolenia/groups/{item_id}/:
+    patch:
+      operationId: szkolenia_groups_partial_update
+      summary: Update training group
+      parameters:
+      - in: path
+        name: item_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Training
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTrainingGroupRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedTrainingGroupRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedTrainingGroupRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingGroup'
+          description: ''
+        '404':
+          description: Object not found.
+    delete:
+      operationId: szkolenia_groups_destroy
+      summary: Delete training group
+      parameters:
+      - in: path
+        name: item_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Training
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: Deleted successfully.
+        '404':
+          description: Object not found.
+  /api/szkolenia/management-settings/:
+    get:
+      operationId: szkolenia_management_settings_retrieve
+      summary: Get training management settings
+      tags:
+      - Training
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  training_hour_price:
+                    type: string
+                    example: '120.00'
+          description: ''
+        '403':
+          description: Missing permissions.
+  /api/szkolenia/management-training-types/:
+    get:
+      operationId: szkolenia_management_training_types_list
+      summary: List management training types
+      tags:
+      - Szkolenia
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TrainingType'
+          description: ''
+    post:
+      operationId: szkolenia_management_training_types_create
+      summary: Create management training type
+      tags:
+      - Szkolenia
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrainingTypeRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TrainingTypeRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TrainingTypeRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingType'
+          description: ''
+  /api/szkolenia/management-training-types/{type_id}/:
+    patch:
+      operationId: szkolenia_management_training_types_partial_update
+      summary: Update training type or hour price
+      parameters:
+      - in: path
+        name: type_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Szkolenia
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Technical training
+                price_per_hour:
+                  type: string
+                  example: '90.00'
+                training_hour_price:
+                  type: string
+                  example: '120.00'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: Training type or management price updated.
+        '404':
+          description: Type not found.
+    delete:
+      operationId: szkolenia_management_training_types_destroy
+      summary: Delete training type
+      parameters:
+      - in: path
+        name: type_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Szkolenia
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: Training type deleted.
+        '404':
+          description: Type not found.
+  /api/szkolenia/my-calendar/:
+    get:
+      operationId: szkolenia_my_calendar_list
+      description: Returns events where current member is player or coach.
+      summary: Get my training calendar
+      tags:
+      - Training
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TrainingCalendarEvent'
+          description: ''
+        '403':
+          description: Missing permissions.
+  /api/szkolenia/parent-zone/calendar/:
+    get:
+      operationId: szkolenia_parent_zone_calendar_retrieve
+      summary: Get parent training calendar
+      tags:
+      - Training Parent
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+          description: ''
+  /api/szkolenia/parent-zone/calendar/month-pay-in-club/:
+    post:
+      operationId: szkolenia_parent_zone_calendar_month_pay_in_club_create
+      summary: Mark month as pay in club
+      tags:
+      - Training Parent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                month:
+                  type: string
+                  example: 2026-07
+                  description: Month in YYYY-MM format
+              required:
+              - month
+              additionalProperties: false
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: Month marked as pay-in-club.
+  /api/szkolenia/parent-zone/calendar/month-pay-online/:
+    post:
+      operationId: szkolenia_parent_zone_calendar_month_pay_online_create
+      summary: Mark month as paid online
+      tags:
+      - Training Parent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                month:
+                  type: string
+                  example: 2026-07
+                  description: Month in YYYY-MM format
+              required:
+              - month
+              additionalProperties: false
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: Month marked as paid online.
+  /api/szkolenia/parent-zone/children/:
+    get:
+      operationId: szkolenia_parent_zone_children_retrieve
+      summary: List parent children
+      tags:
+      - Training Parent
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+          description: ''
+  /api/szkolenia/parent-zone/children/{child_id}/:
+    patch:
+      operationId: szkolenia_parent_zone_children_partial_update
+      description: Supports multipart updates and optional email completion for placeholder
+        child accounts.
+      summary: Update child data in parent zone
+      parameters:
+      - in: path
+        name: child_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Training Parent
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedParentChildUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedParentChildUpdateRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: ''
+        '404':
+          description: Child not found for this parent.
+  /api/szkolenia/parent-zone/payments/:
+    get:
+      operationId: szkolenia_parent_zone_payments_list
+      summary: List parent training payments
+      tags:
+      - Training Parent
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ParentTrainingPayment'
+          description: ''
+  /api/szkolenia/parent-zone/payments/{payment_id}/pay/:
+    post:
+      operationId: szkolenia_parent_zone_payments_pay_create
+      summary: Pay single training payment
+      parameters:
+      - in: path
+        name: payment_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Training Parent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                method:
+                  type: string
+                  enum:
+                  - club
+                  - blik
+                  example: blik
+              required:
+              - method
+              additionalProperties: false
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParentTrainingPayment'
+          description: ''
+        '404':
+          description: Payment not found.
+  /api/szkolenia/players/:
+    get:
+      operationId: szkolenia_players_list
+      description: Returns club members with player role.
+      summary: List training players
+      tags:
+      - Training
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TrainingMember'
+          description: ''
+    post:
+      operationId: szkolenia_players_create
+      description: Creation is disabled for this endpoint.
+      summary: Create player (not allowed)
+      tags:
+      - Training
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrainingMemberRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TrainingMemberRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TrainingMemberRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '405':
+          description: Players are managed in club members module.
+  /api/szkolenia/players/{item_id}/:
+    patch:
+      operationId: szkolenia_players_partial_update
+      summary: Update player (not allowed)
+      parameters:
+      - in: path
+        name: item_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Training
+      security:
+      - jwtAuth: []
+      responses:
+        '405':
+          description: Editing players is not supported on this endpoint.
+    delete:
+      operationId: szkolenia_players_destroy
+      summary: Delete player (not allowed)
+      parameters:
+      - in: path
+        name: item_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Training
+      security:
+      - jwtAuth: []
+      responses:
+        '405':
+          description: Deleting players is not supported on this endpoint.
+  /api/szkolenia/recreational-players/:
+    get:
+      operationId: szkolenia_recreational_players_list
+      description: Returns club members with recreational role.
+      summary: List recreational players
+      tags:
+      - Training
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TrainingMember'
+          description: ''
+    post:
+      operationId: szkolenia_recreational_players_create
+      description: Creation is disabled for this endpoint.
+      summary: Create recreational player (not allowed)
+      tags:
+      - Training
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrainingMemberRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TrainingMemberRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TrainingMemberRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '405':
+          description: Recreational players are managed in club members module.
+  /api/szkolenia/training-types/:
+    get:
+      operationId: szkolenia_training_types_list
+      summary: List training types for trainer zone
+      tags:
+      - Training
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TrainingType'
+          description: ''
+    post:
+      operationId: szkolenia_training_types_create
+      summary: Create training type in trainer zone
+      tags:
+      - Training
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrainingTypeRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TrainingTypeRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TrainingTypeRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingType'
+          description: ''
+  /api/user_management/activate/{token}/:
+    get:
+      operationId: user_management_activate_retrieve
+      description: Verifies activation token, activates account, and redirects user
+        to frontend login page.
+      summary: Activate account
+      parameters:
+      - in: path
+        name: token
+        schema:
+          type: string
+        description: Account activation token from email link.
+        required: true
+      tags:
+      - Authentication
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '302':
+          description: Account activated and redirect to frontend login.
+        '400':
+          description: Invalid or expired activation token.
+  /api/user_management/admin/abo_users/:
+    get:
+      operationId: user_management_admin_abo_users_retrieve
+      description: Returns list of profiles for users with abonament user type.
+      summary: List abonament profiles
+      tags:
+      - Admin
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                application/json:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      username:
+                        type: string
+                        example: club_owner
+                      email:
+                        type: string
+                        example: owner@example.com
+                      abonament:
+                        type: string
+                        example: premium
+                      profile_id:
+                        type: integer
+                        example: 10
+          description: List of abonament user profiles.
+        '401':
+          description: Authentication required.
+        '403':
+          description: Admin role required.
+  /api/user_management/admin/delete_abo_user/:
+    delete:
+      operationId: user_management_admin_delete_abo_user_destroy
+      description: Deletes a user by username. If user owns a club, related member
+        users and club are removed.
+      summary: Delete user
+      parameters:
+      - in: query
+        name: username
+        schema:
+          type: string
+        description: Username to delete.
+        required: true
+      tags:
+      - Admin
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: User and related data deleted.
+        '404':
+          description: User not found.
+        '401':
+          description: Authentication required.
+        '403':
+          description: Admin role required.
+  /api/user_management/authenticated_password_reset/:
+    post:
+      operationId: user_management_authenticated_password_reset_create
+      description: Allows an authenticated user to reset their password. Requires
+        a valid password in the request body.
+      summary: Authenticated password reset
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                  example: test_password
+                  description: New password for the authenticated user.
+              required:
+              - password
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                application/json:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: Haslo zostalo zresetowane.
+          description: Password reset successful.
+        '400':
+          content:
+            application/json:
+              schema:
+                application/json:
+                  type: object
+                  properties:
+                    error:
+                      type: string
+                      example: Haslo jest wymagane.
+          description: Password is required.
+  /api/user_management/legal/accept/:
+    post:
+      operationId: user_management_legal_accept_create
+      description: Stores terms and privacy policy acceptance for authenticated user.
+      summary: Accept legal terms
+      tags:
+      - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accept_terms:
+                  type: boolean
+                  example: true
+                accept_privacy_policy:
+                  type: boolean
+                  example: true
+              required:
+              - accept_terms
+              - accept_privacy_policy
+              additionalProperties: false
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: Legal acceptance saved.
+        '400':
+          description: Required legal acceptance flags missing or false.
+        '401':
+          description: Authentication required.
+  /api/user_management/password_reset/:
+    post:
+      operationId: user_management_password_reset_create
+      description: Sends password reset instructions to the provided email if it exists
+        in the system.
+      summary: Request password reset
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: admin.club@test.local
+                  description: Email address associated with the account
+              required:
+              - email
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: Success message regardless of email existence
+        '400':
+          description: Missing email in request
+  /api/user_management/password_reset_confirm/{token}/:
+    get:
+      operationId: user_management_password_reset_confirm_retrieve
+      description: Checks if password reset token exists and can be used.
+      summary: Validate password reset token
+      parameters:
+      - in: path
+        name: token
+        schema:
+          type: string
+        description: Password reset token from email link.
+        required: true
+      tags:
+      - Authentication
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: Token is valid.
+        '400':
+          description: Invalid or expired token.
+    post:
+      operationId: user_management_password_reset_confirm_create
+      description: Resets user password using valid reset token and clears the token.
+      summary: Confirm password reset
+      parameters:
+      - in: path
+        name: token
+        schema:
+          type: string
+        description: Password reset token from email link.
+        required: true
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                  example: test_password
+                  description: New password for the user.
+              required:
+              - password
+              additionalProperties: false
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: Password reset successful.
+        '400':
+          description: Invalid token or password missing.
+  /api/user_management/profile/:
+    get:
+      operationId: user_management_profile_retrieve
+      description: Returns the authenticated user profile information.
+      summary: Get user profile
+      tags:
+      - User
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                application/json:
+                  type: object
+                  properties:
+                    username:
+                      type: string
+                      example: user1
+                    email:
+                      type: string
+                      example: user1@example.com
+                    abonament:
+                      type: string
+                      example: premium
+                    user_type:
+                      type: string
+                      example: abonament
+                    profile_id:
+                      type: integer
+                      example: 123
+          description: Authenticated user profile data.
+        '401':
+          content:
+            application/json:
+              schema:
+                application/json:
+                  type: object
+                  properties:
+                    detail:
+                      type: string
+                      example: Authentication credentials were not provided.
+          description: Authentication required.
+  /api/user_management/profile/update/:
+    patch:
+      operationId: user_management_profile_update_partial_update
+      description: Partially updates authenticated user profile data.
+      summary: Update user profile
+      tags:
+      - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserProfileUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserProfileUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserProfileUpdateRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: Profile updated successfully.
+        '400':
+          description: Validation error.
+        '401':
+          description: Authentication required.
+        '500':
+          description: Internal server error.
+  /api/user_management/register/:
+    post:
+      operationId: user_management_register_create
+      description: Creates a new user with default club context and sends an activation
+        email.
+      summary: Register new account
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: admin.club@test.local
+                password:
+                  type: string
+                  example: test_password
+                accept_terms:
+                  type: boolean
+                  example: true
+                accept_privacy_policy:
+                  type: boolean
+                  example: true
+                abonament:
+                  type: string
+                  example: basic
+              required:
+              - email
+              - password
+              - accept_terms
+              - accept_privacy_policy
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          description: Registration successful and activation email sent.
+        '400':
+          description: Validation error or missing legal acceptance.
+        '503':
+          description: Activation email could not be sent.
+  /api/user_management/resend-activation/:
+    post:
+      operationId: user_management_resend_activation_create
+      description: Sends activation email again when account is not activated. Returns
+        generic success response.
+      summary: Resend activation email
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: admin.club@test.local
+              required:
+              - email
+              additionalProperties: false
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: Generic success message to prevent account enumeration.
+        '400':
+          description: Email is missing in request body.
+  /api/user_management/token/:
+    post:
+      operationId: user_management_token_create
+      description: Authenticate user and return JWT access and refresh tokens.
+      summary: Obtain JWT token pair
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+              - username
+              - password
+              additionalProperties: false
+            examples:
+              ValidLogin:
+                value:
+                  username: admin.club@test.local
+                  password: test_password
+                summary: Valid Login
+              InvalidPassword:
+                value:
+                  username: admin.club@test.local
+                  password: wrong_password
+                summary: Invalid Password
+              MissingParameters:
+                value:
+                  username: admin.club@test.local
+                summary: Missing parameters
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  refresh:
+                    type: string
+                    example: refresh_token
+                  access:
+                    type: string
+                    example: access_token
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: No active account found with the given credentials
+          description: ''
+        '500':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: Internal server error.
+                description: Internal server error.
+          description: ''
+  /api/user_management/token/refresh/:
+    post:
+      operationId: user_management_token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - user_management
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+components:
+  schemas:
+    AktualnosciComment:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        content:
+          type: string
+        author:
+          type: integer
+          readOnly: true
+          nullable: true
+        author_name:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - author
+      - author_name
+      - content
+      - created_at
+      - id
+      - updated_at
+    AktualnosciCommentCreateRequest:
+      type: object
+      properties:
+        content:
+          type: string
+          minLength: 1
+      required:
+      - content
+    AktualnosciThread:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 200
+        content:
+          type: string
+        external_link:
+          nullable: true
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 200
+          - type: string
+            maxLength: 0
+        author:
+          type: integer
+          readOnly: true
+          nullable: true
+        author_name:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/AktualnosciComment'
+          readOnly: true
+      required:
+      - author
+      - author_name
+      - comments
+      - content
+      - created_at
+      - id
+      - updated_at
+    AktualnosciThreadUpdateRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 200
+        content:
+          type: string
+          minLength: 1
+        external_link:
+          nullable: true
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 200
+          - type: string
+            maxLength: 0
+      required:
+      - content
+    Attachment:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        file:
+          type: string
+          format: uri
+        uploaded_at:
+          type: string
+          format: date-time
+          readOnly: true
+        club_id:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+      required:
+      - file
+      - id
+      - uploaded_at
+    AttachmentRequest:
+      type: object
+      properties:
+        file:
+          type: string
+          format: binary
+        club_id:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+      required:
+      - file
+    ClubCalendarEvent:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 160
+        description:
+          type: string
+        location:
+          type: string
+          maxLength: 255
+        start_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+        all_day:
+          type: boolean
+        created_by:
+          type: integer
+          readOnly: true
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - created_by
+      - end_time
+      - id
+      - start_time
+      - title
+      - updated_at
+    ClubCalendarEventRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 160
+        description:
+          type: string
+        location:
+          type: string
+          maxLength: 255
+        start_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+        all_day:
+          type: boolean
+      required:
+      - end_time
+      - start_time
+      - title
+    ClubPhoto:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        image:
+          type: string
+          format: uri
+        image_url:
+          type: string
+          readOnly: true
+        position:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - image
+      - image_url
+    ClubPhotoRequest:
+      type: object
+      properties:
+        image:
+          type: string
+          format: binary
+        position:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+      required:
+      - image
+    ClubProfile:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        logo:
+          type: string
+          format: uri
+          nullable: true
+        photos:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClubPhoto'
+          readOnly: true
+        opening_time_mon:
+          type: string
+          format: time
+          nullable: true
+        closing_time_mon:
+          type: string
+          format: time
+          nullable: true
+        opening_time_tue:
+          type: string
+          format: time
+          nullable: true
+        closing_time_tue:
+          type: string
+          format: time
+          nullable: true
+        opening_time_wed:
+          type: string
+          format: time
+          nullable: true
+        closing_time_wed:
+          type: string
+          format: time
+          nullable: true
+        opening_time_thu:
+          type: string
+          format: time
+          nullable: true
+        closing_time_thu:
+          type: string
+          format: time
+          nullable: true
+        opening_time_fri:
+          type: string
+          format: time
+          nullable: true
+        closing_time_fri:
+          type: string
+          format: time
+          nullable: true
+        opening_time_sat:
+          type: string
+          format: time
+          nullable: true
+        closing_time_sat:
+          type: string
+          format: time
+          nullable: true
+        opening_time_sun:
+          type: string
+          format: time
+          nullable: true
+        closing_time_sun:
+          type: string
+          format: time
+          nullable: true
+        current_storage_usage_mb:
+          type: string
+          readOnly: true
+        remaining_storage_mb:
+          type: string
+          readOnly: true
+        storage_limit_enabled:
+          type: string
+          readOnly: true
+        current_users_count:
+          type: string
+          readOnly: true
+        remaining_user_slots:
+          type: string
+          readOnly: true
+        user_limit_enabled:
+          type: string
+          readOnly: true
+        effective_user_limit:
+          type: string
+          readOnly: true
+        effective_storage_limit_mb:
+          type: string
+          readOnly: true
+        name:
+          type: string
+          title: Nazwa klubu
+          maxLength: 100
+        user_limit:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          nullable: true
+          description: Maksymalna liczba użytkowników klubu. Brak wartości oznacza
+            brak limitu.
+        storage_limit_mb:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          nullable: true
+          description: Maksymalna przestrzeń dyskowa klubu (MB). Brak wartości oznacza
+            brak limitu.
+        contact_email:
+          type: string
+          format: email
+          title: Email kontaktowy
+          maxLength: 254
+        website:
+          nullable: true
+          title: Strona klubu
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 200
+          - type: string
+            maxLength: 0
+        contact_phone:
+          type: string
+          title: Telefon kontaktowy
+          maxLength: 20
+        location:
+          type: string
+          title: Lokalizacja
+          maxLength: 255
+        closed_mon:
+          type: boolean
+        closed_tue:
+          type: boolean
+        closed_wed:
+          type: boolean
+        closed_thu:
+          type: boolean
+        closed_fri:
+          type: boolean
+        closed_sat:
+          type: boolean
+        closed_sun:
+          type: boolean
+        training_hour_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+      required:
+      - contact_email
+      - contact_phone
+      - current_storage_usage_mb
+      - current_users_count
+      - effective_storage_limit_mb
+      - effective_user_limit
+      - id
+      - location
+      - name
+      - photos
+      - remaining_storage_mb
+      - remaining_user_slots
+      - storage_limit_enabled
+      - user_limit_enabled
+    DayTypeEnum:
+      enum:
+      - weekday
+      - weekend
+      type: string
+      description: |-
+        * `weekday` - Dni zwykłe
+        * `weekend` - Weekend
+    DraftEmail:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        sender:
+          type: integer
+          readOnly: true
+        sender_name:
+          type: string
+          readOnly: true
+        recipients:
+          type: array
+          items:
+            type: integer
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attachment'
+          readOnly: true
+        attachments_upload:
+          type: array
+          items:
+            type: string
+            format: uri
+        reply_to:
+          type: integer
+          nullable: true
+        replies:
+          type: string
+          readOnly: true
+        is_starred_by:
+          type: array
+          items:
+            type: integer
+        is_read_by:
+          type: array
+          items:
+            type: integer
+        is_deleted_by:
+          type: array
+          items:
+            type: integer
+        is_draft_by:
+          type: array
+          items:
+            type: integer
+        is_archived_by:
+          type: array
+          items:
+            type: integer
+        subject:
+          type: string
+        body:
+          type: string
+        sent_at:
+          type: string
+          format: date-time
+          readOnly: true
+        is_sent:
+          type: boolean
+      required:
+      - attachments
+      - id
+      - recipients
+      - replies
+      - sender
+      - sender_name
+      - sent_at
+    DraftEmailRequest:
+      type: object
+      properties:
+        recipients:
+          type: array
+          items:
+            type: integer
+        attachments_upload:
+          type: array
+          items:
+            type: string
+            format: binary
+        reply_to:
+          type: integer
+          nullable: true
+        is_starred_by:
+          type: array
+          items:
+            type: integer
+        is_read_by:
+          type: array
+          items:
+            type: integer
+        is_deleted_by:
+          type: array
+          items:
+            type: integer
+        is_draft_by:
+          type: array
+          items:
+            type: integer
+        is_archived_by:
+          type: array
+          items:
+            type: integer
+        subject:
+          type: string
+        body:
+          type: string
+        is_sent:
+          type: boolean
+      required:
+      - recipients
+    Email:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        sender:
+          type: integer
+          readOnly: true
+        sender_name:
+          type: string
+          readOnly: true
+        recipients:
+          type: array
+          items:
+            type: integer
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attachment'
+          readOnly: true
+        attachments_upload:
+          type: array
+          items:
+            type: string
+            format: uri
+        reply_to:
+          type: integer
+          nullable: true
+        replies:
+          type: string
+          readOnly: true
+        is_starred_by:
+          type: array
+          items:
+            type: integer
+        is_read_by:
+          type: array
+          items:
+            type: integer
+        is_deleted_by:
+          type: array
+          items:
+            type: integer
+        is_draft_by:
+          type: array
+          items:
+            type: integer
+        is_archived_by:
+          type: array
+          items:
+            type: integer
+        subject:
+          type: string
+          maxLength: 255
+        body:
+          type: string
+        sent_at:
+          type: string
+          format: date-time
+          readOnly: true
+        is_sent:
+          type: boolean
+      required:
+      - attachments
+      - id
+      - recipients
+      - replies
+      - sender
+      - sender_name
+      - sent_at
+    EmailRequest:
+      type: object
+      properties:
+        recipients:
+          type: array
+          items:
+            type: integer
+        attachments_upload:
+          type: array
+          items:
+            type: string
+            format: binary
+        reply_to:
+          type: integer
+          nullable: true
+        is_starred_by:
+          type: array
+          items:
+            type: integer
+        is_read_by:
+          type: array
+          items:
+            type: integer
+        is_deleted_by:
+          type: array
+          items:
+            type: integer
+        is_draft_by:
+          type: array
+          items:
+            type: integer
+        is_archived_by:
+          type: array
+          items:
+            type: integer
+        subject:
+          type: string
+          maxLength: 255
+        body:
+          type: string
+        is_sent:
+          type: boolean
+      required:
+      - recipients
+    KindEnum:
+      enum:
+      - closed
+      - reserved
+      type: string
+      description: |-
+        * `closed` - Zamknięte
+        * `reserved` - Zarezerwowane
+    Member:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+        roles:
+          type: array
+          items:
+            allOf:
+            - $ref: '#/components/schemas/RolesEnum'
+            title: Rola
+        permissions:
+          type: array
+          items:
+            allOf:
+            - $ref: '#/components/schemas/PermissionsEnum'
+            title: Uprawnienie
+        children:
+          type: array
+          items:
+            type: integer
+        username:
+          type: string
+          readOnly: true
+        has_login_account:
+          type: string
+          readOnly: true
+        uses_placeholder_email:
+          type: string
+          readOnly: true
+        parents:
+          type: string
+          readOnly: true
+        parents_details:
+          type: string
+          readOnly: true
+        profile_photo_url:
+          type: string
+          readOnly: true
+        first_name:
+          type: string
+          title: Imię
+          maxLength: 50
+        last_name:
+          type: string
+          title: Nazwisko
+          maxLength: 50
+        phone:
+          type: string
+          nullable: true
+          title: Telefon
+          maxLength: 20
+        profile_photo:
+          type: string
+          format: uri
+          nullable: true
+        profile:
+          type: integer
+          nullable: true
+      required:
+      - email
+      - has_login_account
+      - id
+      - parents
+      - parents_details
+      - profile_photo_url
+      - username
+      - uses_placeholder_email
+    MemberRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+        roles:
+          type: array
+          items:
+            allOf:
+            - $ref: '#/components/schemas/RolesEnum'
+            title: Rola
+        permissions:
+          type: array
+          items:
+            allOf:
+            - $ref: '#/components/schemas/PermissionsEnum'
+            title: Uprawnienie
+        children:
+          type: array
+          items:
+            type: integer
+        first_name:
+          type: string
+          title: Imię
+          maxLength: 50
+        last_name:
+          type: string
+          title: Nazwisko
+          maxLength: 50
+        phone:
+          type: string
+          nullable: true
+          title: Telefon
+          maxLength: 20
+        profile_photo:
+          type: string
+          format: binary
+          nullable: true
+        profile:
+          type: integer
+          nullable: true
+      required:
+      - email
+    PaidViaEnum:
+      enum:
+      - blik
+      type: string
+      description: '* `blik` - BLIK'
+    ParentTrainingPayment:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 160
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        currency:
+          type: string
+          maxLength: 8
+        due_date:
+          type: string
+          format: date
+          nullable: true
+        status:
+          allOf:
+          - $ref: '#/components/schemas/ParentTrainingPaymentStatusEnum'
+          readOnly: true
+        status_label:
+          type: string
+          readOnly: true
+        paid_via:
+          allOf:
+          - $ref: '#/components/schemas/PaidViaEnum'
+          readOnly: true
+        paid_via_label:
+          type: string
+          readOnly: true
+        paid_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        notes:
+          type: string
+        child:
+          type: integer
+        child_name:
+          type: string
+          readOnly: true
+        group:
+          type: integer
+          nullable: true
+        group_name:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - amount
+      - child
+      - child_name
+      - created_at
+      - group_name
+      - id
+      - paid_at
+      - paid_via
+      - paid_via_label
+      - status
+      - status_label
+      - updated_at
+    ParentTrainingPaymentStatusEnum:
+      enum:
+      - unpaid
+      - paid
+      - pay_in_club
+      - payed_in_club
+      type: string
+      description: |-
+        * `unpaid` - Nieopłacona
+        * `paid` - Opłacona
+        * `pay_in_club` - Opłać w klubie
+        * `payed_in_club` - Opłacona w klubie
+    PatchedAktualnosciThreadUpdateRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 200
+        content:
+          type: string
+          minLength: 1
+        external_link:
+          nullable: true
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 200
+          - type: string
+            maxLength: 0
+    PatchedClubCalendarEventRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 160
+        description:
+          type: string
+        location:
+          type: string
+          maxLength: 255
+        start_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+        all_day:
+          type: boolean
+    PatchedClubPhotoRequest:
+      type: object
+      properties:
+        image:
+          type: string
+          format: binary
+        position:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+    PatchedClubProfileRequest:
+      type: object
+      properties:
+        logo:
+          type: string
+          format: binary
+        upload_photos:
+          type: array
+          items:
+            type: string
+            format: binary
+          writeOnly: true
+        opening_time_mon:
+          type: string
+          format: time
+          nullable: true
+        closing_time_mon:
+          type: string
+          format: time
+          nullable: true
+        opening_time_tue:
+          type: string
+          format: time
+          nullable: true
+        closing_time_tue:
+          type: string
+          format: time
+          nullable: true
+        opening_time_wed:
+          type: string
+          format: time
+          nullable: true
+        closing_time_wed:
+          type: string
+          format: time
+          nullable: true
+        opening_time_thu:
+          type: string
+          format: time
+          nullable: true
+        closing_time_thu:
+          type: string
+          format: time
+          nullable: true
+        opening_time_fri:
+          type: string
+          format: time
+          nullable: true
+        closing_time_fri:
+          type: string
+          format: time
+          nullable: true
+        opening_time_sat:
+          type: string
+          format: time
+          nullable: true
+        closing_time_sat:
+          type: string
+          format: time
+          nullable: true
+        opening_time_sun:
+          type: string
+          format: time
+          nullable: true
+        closing_time_sun:
+          type: string
+          format: time
+          nullable: true
+        name:
+          type: string
+          minLength: 1
+          title: Nazwa klubu
+          maxLength: 100
+        user_limit:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          nullable: true
+          description: Maksymalna liczba użytkowników klubu. Brak wartości oznacza
+            brak limitu.
+        storage_limit_mb:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          nullable: true
+          description: Maksymalna przestrzeń dyskowa klubu (MB). Brak wartości oznacza
+            brak limitu.
+        contact_email:
+          type: string
+          format: email
+          minLength: 1
+          title: Email kontaktowy
+          maxLength: 254
+        website:
+          nullable: true
+          title: Strona klubu
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 200
+          - type: string
+            maxLength: 0
+        contact_phone:
+          type: string
+          minLength: 1
+          title: Telefon kontaktowy
+          maxLength: 20
+        location:
+          type: string
+          minLength: 1
+          title: Lokalizacja
+          maxLength: 255
+        closed_mon:
+          type: boolean
+        closed_tue:
+          type: boolean
+        closed_wed:
+          type: boolean
+        closed_thu:
+          type: boolean
+        closed_fri:
+          type: boolean
+        closed_sat:
+          type: boolean
+        closed_sun:
+          type: boolean
+        training_hour_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+    PatchedDraftEmailRequest:
+      type: object
+      properties:
+        recipients:
+          type: array
+          items:
+            type: integer
+        attachments_upload:
+          type: array
+          items:
+            type: string
+            format: binary
+        reply_to:
+          type: integer
+          nullable: true
+        is_starred_by:
+          type: array
+          items:
+            type: integer
+        is_read_by:
+          type: array
+          items:
+            type: integer
+        is_deleted_by:
+          type: array
+          items:
+            type: integer
+        is_draft_by:
+          type: array
+          items:
+            type: integer
+        is_archived_by:
+          type: array
+          items:
+            type: integer
+        subject:
+          type: string
+        body:
+          type: string
+        is_sent:
+          type: boolean
+    PatchedMemberRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+        roles:
+          type: array
+          items:
+            allOf:
+            - $ref: '#/components/schemas/RolesEnum'
+            title: Rola
+        permissions:
+          type: array
+          items:
+            allOf:
+            - $ref: '#/components/schemas/PermissionsEnum'
+            title: Uprawnienie
+        children:
+          type: array
+          items:
+            type: integer
+        first_name:
+          type: string
+          title: Imię
+          maxLength: 50
+        last_name:
+          type: string
+          title: Nazwisko
+          maxLength: 50
+        phone:
+          type: string
+          nullable: true
+          title: Telefon
+          maxLength: 20
+        profile_photo:
+          type: string
+          format: binary
+          nullable: true
+        profile:
+          type: integer
+          nullable: true
+    PatchedParentChildUpdateRequest:
+      type: object
+      properties:
+        phone:
+          type: string
+          nullable: true
+        profile_photo:
+          type: string
+          format: binary
+        email:
+          oneOf:
+          - type: string
+            format: email
+          - type: string
+            maxLength: 0
+    PatchedSportObjectExtraRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 120
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+    PatchedSportObjectPhotoRequest:
+      type: object
+      properties:
+        image:
+          type: string
+          format: binary
+        position:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+    PatchedSportObjectPriceRequest:
+      type: object
+      properties:
+        day_type:
+          $ref: '#/components/schemas/DayTypeEnum'
+        start_time:
+          type: string
+          format: time
+        end_time:
+          type: string
+          format: time
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+    PatchedSportObjectRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 120
+        type:
+          $ref: '#/components/schemas/TypeEnum'
+        description:
+          type: string
+        location:
+          type: string
+          maxLength: 255
+        opening_time:
+          type: string
+          format: time
+        closing_time:
+          type: string
+          format: time
+        min_reservation_minutes:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        max_recurring_days:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        cancellation_window_minutes:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        belongs_to_club:
+          type: boolean
+        pay_in_club_only:
+          type: boolean
+        is_active:
+          type: boolean
+        upload_photos:
+          type: array
+          items:
+            type: string
+            format: binary
+          writeOnly: true
+    PatchedSportObjectSpecialDayRequest:
+      type: object
+      properties:
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        start_time:
+          type: string
+          format: time
+          nullable: true
+        end_time:
+          type: string
+          format: time
+          nullable: true
+        kind:
+          $ref: '#/components/schemas/KindEnum'
+        label:
+          type: string
+          maxLength: 255
+        notes:
+          type: string
+    PatchedTrainingCalendarEventRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 160
+        group_id:
+          type: integer
+          writeOnly: true
+        sport_object_id:
+          type: integer
+          writeOnly: true
+          nullable: true
+        reservation_id:
+          type: integer
+          writeOnly: true
+          nullable: true
+        reservation_ids:
+          type: array
+          items:
+            type: integer
+            minimum: 1
+        start_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+        notes:
+          type: string
+    PatchedTrainingGroupRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        max_members:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          nullable: true
+        age_range:
+          type: string
+          maxLength: 80
+        description:
+          type: string
+        training_type_id:
+          type: integer
+          writeOnly: true
+          nullable: true
+        coach_id:
+          type: integer
+          writeOnly: true
+          nullable: true
+        player_ids:
+          type: array
+          items:
+            type: integer
+            minimum: 1
+          writeOnly: true
+    PatchedUserProfileUpdateRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+        abonament:
+          type: string
+          minLength: 1
+        user_type:
+          type: string
+          minLength: 1
+    PaymentStatusEnum:
+      enum:
+      - unpaid
+      - pay_in_club
+      - paid
+      type: string
+      description: |-
+        * `unpaid` - Nie zapłacono
+        * `pay_in_club` - Płatność w klubie
+        * `paid` - Zapłacono
+    Permission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        code:
+          type: string
+        label:
+          type: string
+      required:
+      - code
+      - id
+      - label
+    PermissionsEnum:
+      enum:
+      - aktualnosci_dodawanie_watku
+      - aktualnosci_edycja_watku
+      - aktualnosci_komentowanie
+      - komunikacja
+      - zarzadzanie_klubem
+      - zarzadzanie_rezerwacjami
+      - rezerwacje
+      - kalendarz_klubowy_zarzadzanie
+      - kalendarz_klubowy_ogladanie
+      - strefa_trenera_odczyt
+      - strefa_trenera_zapis
+      - strefa_trenera_menu
+      - strefa_rodzica_pokaz_menu
+      - strefa_rodzica_odczyt
+      - strefa_rodzica_zapis
+      - platnosci_zajec_pokaz
+      - platnosci_zajec_edycja
+      - kalendarz_zajec_odczyt
+      - kalendarz_zajec_menu
+      type: string
+      description: |-
+        * `aktualnosci_dodawanie_watku` - Aktualności - dodawanie wątków
+        * `aktualnosci_edycja_watku` - Aktualności - edycja wątków
+        * `aktualnosci_komentowanie` - Aktualności - komentowanie
+        * `komunikacja` - Wiadomości
+        * `zarzadzanie_klubem` - Zarządzanie klubem
+        * `zarzadzanie_rezerwacjami` - Zarządzanie rezerwacjami obiektów sportowych
+        * `rezerwacje` - Rezerwacje
+        * `kalendarz_klubowy_zarzadzanie` - Kalendarz klubowy - zarządzanie
+        * `kalendarz_klubowy_ogladanie` - Kalendarz klubowy - oglądanie
+        * `strefa_trenera_odczyt` - Strefa trenera - odczyt
+        * `strefa_trenera_zapis` - Strefa trenera - zapis
+        * `strefa_trenera_menu` - Strefa trenera - pokaż w menu
+        * `strefa_rodzica_pokaz_menu` - Strefa rodzica - pokaż w menu
+        * `strefa_rodzica_odczyt` - Strefa rodzica - odczyt
+        * `strefa_rodzica_zapis` - Strefa rodzica - zapis
+        * `platnosci_zajec_pokaz` - Płatności zajęć - pokaż
+        * `platnosci_zajec_edycja` - Płatności zajęć - edycja
+        * `kalendarz_zajec_odczyt` - Kalendarz zajęć - odczyt
+        * `kalendarz_zajec_menu` - Kalendarz zajęć - pokaż w menu
+    Role:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        code:
+          type: string
+        label:
+          type: string
+        description:
+          type: string
+          readOnly: true
+        default_permissions:
+          type: string
+          readOnly: true
+        default_permission_labels:
+          type: string
+          readOnly: true
+      required:
+      - code
+      - default_permission_labels
+      - default_permissions
+      - description
+      - id
+      - label
+    RolesEnum:
+      enum:
+      - administrator
+      - prezes
+      - trener
+      - zawodnik
+      - rodzic
+      - skarbnik
+      - recepcja
+      - rekreacja
+      - gosc
+      type: string
+      description: |-
+        * `administrator` - Administrator
+        * `prezes` - Prezes
+        * `trener` - Trener
+        * `zawodnik` - Zawodnik
+        * `rodzic` - Rodzic
+        * `skarbnik` - Skarbnik
+        * `recepcja` - Recepcja
+        * `rekreacja` - Rekreacja
+        * `gosc` - Gość
+    SportObject:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        club:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 120
+        type:
+          $ref: '#/components/schemas/TypeEnum'
+        description:
+          type: string
+        location:
+          type: string
+          maxLength: 255
+        opening_time:
+          type: string
+          format: time
+        closing_time:
+          type: string
+          format: time
+        min_reservation_minutes:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        max_recurring_days:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        cancellation_window_minutes:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        belongs_to_club:
+          type: boolean
+        pay_in_club_only:
+          type: boolean
+        is_active:
+          type: boolean
+        special_days:
+          type: array
+          items:
+            $ref: '#/components/schemas/SportObjectSpecialDay'
+          readOnly: true
+        prices:
+          type: array
+          items:
+            $ref: '#/components/schemas/SportObjectPrice'
+          readOnly: true
+        extras:
+          type: array
+          items:
+            $ref: '#/components/schemas/SportObjectExtra'
+          readOnly: true
+        photos:
+          type: array
+          items:
+            $ref: '#/components/schemas/SportObjectPhoto'
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - club
+      - created_at
+      - extras
+      - id
+      - name
+      - photos
+      - prices
+      - special_days
+      - updated_at
+    SportObjectExtra:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        sport_object:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 120
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - amount
+      - created_at
+      - id
+      - name
+      - sport_object
+      - updated_at
+    SportObjectExtraRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 120
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+      required:
+      - amount
+      - name
+    SportObjectPhoto:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        image:
+          type: string
+          format: uri
+        image_url:
+          type: string
+          readOnly: true
+        position:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - image
+      - image_url
+    SportObjectPhotoRequest:
+      type: object
+      properties:
+        image:
+          type: string
+          format: binary
+        position:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+      required:
+      - image
+    SportObjectPrice:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        sport_object:
+          type: integer
+          readOnly: true
+        day_type:
+          $ref: '#/components/schemas/DayTypeEnum'
+        start_time:
+          type: string
+          format: time
+        end_time:
+          type: string
+          format: time
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - end_time
+      - id
+      - price
+      - sport_object
+      - start_time
+      - updated_at
+    SportObjectPriceRequest:
+      type: object
+      properties:
+        day_type:
+          $ref: '#/components/schemas/DayTypeEnum'
+        start_time:
+          type: string
+          format: time
+        end_time:
+          type: string
+          format: time
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+      required:
+      - end_time
+      - price
+      - start_time
+    SportObjectRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 120
+        type:
+          $ref: '#/components/schemas/TypeEnum'
+        description:
+          type: string
+        location:
+          type: string
+          maxLength: 255
+        opening_time:
+          type: string
+          format: time
+        closing_time:
+          type: string
+          format: time
+        min_reservation_minutes:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        max_recurring_days:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        cancellation_window_minutes:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        belongs_to_club:
+          type: boolean
+        pay_in_club_only:
+          type: boolean
+        is_active:
+          type: boolean
+        upload_photos:
+          type: array
+          items:
+            type: string
+            format: binary
+          writeOnly: true
+      required:
+      - name
+    SportObjectReservation:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        sport_object:
+          type: integer
+        reserved_by:
+          type: integer
+          readOnly: true
+          nullable: true
+        reserved_by_name:
+          type: string
+          readOnly: true
+        start_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+        status:
+          $ref: '#/components/schemas/SportObjectReservationStatusEnum'
+        payment_status:
+          $ref: '#/components/schemas/PaymentStatusEnum'
+        extras:
+          type: array
+          items:
+            type: integer
+        recurring_weeks:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          nullable: true
+        recurring_weekdays:
+          nullable: true
+        notes:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - end_time
+      - id
+      - reserved_by
+      - reserved_by_name
+      - sport_object
+      - start_time
+      - updated_at
+    SportObjectReservationStatusEnum:
+      enum:
+      - pending
+      - confirmed
+      - cancelled
+      type: string
+      description: |-
+        * `pending` - Oczekująca
+        * `confirmed` - Potwierdzona
+        * `cancelled` - Anulowana
+    SportObjectSpecialDay:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        sport_object:
+          type: integer
+          readOnly: true
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        start_time:
+          type: string
+          format: time
+          nullable: true
+        end_time:
+          type: string
+          format: time
+          nullable: true
+        kind:
+          $ref: '#/components/schemas/KindEnum'
+        label:
+          type: string
+          maxLength: 255
+        notes:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - end_date
+      - id
+      - sport_object
+      - start_date
+      - updated_at
+    SportObjectSpecialDayRequest:
+      type: object
+      properties:
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        start_time:
+          type: string
+          format: time
+          nullable: true
+        end_time:
+          type: string
+          format: time
+          nullable: true
+        kind:
+          $ref: '#/components/schemas/KindEnum'
+        label:
+          type: string
+          maxLength: 255
+        notes:
+          type: string
+      required:
+      - end_date
+      - start_date
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+      required:
+      - access
+    TokenRefreshRequest:
+      type: object
+      properties:
+        refresh:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - refresh
+    TrainingCalendarEvent:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 160
+        group:
+          type: integer
+          readOnly: true
+          nullable: true
+        group_name:
+          type: string
+          readOnly: true
+        sport_object:
+          type: integer
+          readOnly: true
+          nullable: true
+        sport_object_name:
+          type: string
+          readOnly: true
+        sport_object_location:
+          type: string
+          readOnly: true
+        trainer_price_per_hour:
+          type: string
+          readOnly: true
+        object_price_per_hour:
+          type: string
+          readOnly: true
+        child_price_per_hour:
+          type: string
+          readOnly: true
+        group_members_count:
+          type: string
+          readOnly: true
+        reservation:
+          type: integer
+          readOnly: true
+          nullable: true
+        reservation_ids:
+          type: array
+          items:
+            type: integer
+            minimum: 1
+        start_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+        notes:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - child_price_per_hour
+      - created_at
+      - end_time
+      - group
+      - group_members_count
+      - group_name
+      - id
+      - object_price_per_hour
+      - reservation
+      - sport_object
+      - sport_object_location
+      - sport_object_name
+      - start_time
+      - title
+      - trainer_price_per_hour
+      - updated_at
+    TrainingCalendarEventRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 160
+        group_id:
+          type: integer
+          writeOnly: true
+        sport_object_id:
+          type: integer
+          writeOnly: true
+          nullable: true
+        reservation_id:
+          type: integer
+          writeOnly: true
+          nullable: true
+        reservation_ids:
+          type: array
+          items:
+            type: integer
+            minimum: 1
+        start_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+        notes:
+          type: string
+      required:
+      - end_time
+      - start_time
+      - title
+    TrainingGroup:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        max_members:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          nullable: true
+        age_range:
+          type: string
+          maxLength: 80
+        description:
+          type: string
+        training_type:
+          type: string
+          readOnly: true
+        coach:
+          allOf:
+          - $ref: '#/components/schemas/TrainingMember'
+          readOnly: true
+        players:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrainingMember'
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - coach
+      - created_at
+      - id
+      - name
+      - players
+      - training_type
+      - updated_at
+    TrainingGroupRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        max_members:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          nullable: true
+        age_range:
+          type: string
+          maxLength: 80
+        description:
+          type: string
+        training_type_id:
+          type: integer
+          writeOnly: true
+          nullable: true
+        coach_id:
+          type: integer
+          writeOnly: true
+          nullable: true
+        player_ids:
+          type: array
+          items:
+            type: integer
+            minimum: 1
+          writeOnly: true
+      required:
+      - name
+    TrainingMember:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        first_name:
+          type: string
+          title: Imię
+          maxLength: 50
+        last_name:
+          type: string
+          title: Nazwisko
+          maxLength: 50
+        full_name:
+          type: string
+          readOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        phone:
+          type: string
+          nullable: true
+          title: Telefon
+          maxLength: 20
+        roles:
+          type: string
+          readOnly: true
+      required:
+      - email
+      - full_name
+      - id
+      - roles
+    TrainingMemberRequest:
+      type: object
+      properties:
+        first_name:
+          type: string
+          title: Imię
+          maxLength: 50
+        last_name:
+          type: string
+          title: Nazwisko
+          maxLength: 50
+        email:
+          type: string
+          format: email
+          minLength: 1
+          maxLength: 254
+        phone:
+          type: string
+          nullable: true
+          title: Telefon
+          maxLength: 20
+      required:
+      - email
+    TrainingType:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 120
+        price_per_hour:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - name
+      - updated_at
+    TrainingTypeRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 120
+        price_per_hour:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+        is_active:
+          type: boolean
+      required:
+      - name
+    TypeEnum:
+      enum:
+      - tennis_court
+      - fitness_studio
+      - gym
+      - sports_hall
+      - football_pitch
+      - swimming_pool
+      - other
+      type: string
+      description: |-
+        * `tennis_court` - Kort tenisowy
+        * `fitness_studio` - Studio fitness
+        * `gym` - Siłownia
+        * `sports_hall` - Hala sportowa
+        * `football_pitch` - Boisko piłkarskie
+        * `swimming_pool` - Basen
+        * `other` - Inne
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

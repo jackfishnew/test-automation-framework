@@ -12,3 +12,4 @@ schemathesis[allure]
 bzt
 setuptools
 urwid<3.0
+datamodel-code-generator

@@ -6,9 +6,7 @@ from api.api_clients.api_client_base import ApiClient, MockApiClient
 from utility.utility import get_option_env, fetch_and_validate_tokens
 from utility.factories import make_user_data_abonament_basic
 from utility.emails import get_activation_token_from_email_body, clear_emails_mailpit
-import os
-from urllib.parse import urljoin
-from schemathesis import openapi
+
 
 @pytest.fixture(scope="session")
 def api_client(request, api_base_url):  # api_base_url from your existing fixture
@@ -107,12 +105,8 @@ def valid_credentials_admin(pytestconfig: pytest.Config) -> Dict[str, str]:
         "password": get_option_env(pytestconfig, "--api-admin-password", "TEST_API_ADMIN_PASSWORD"),
     }
 
-@pytest.fixture(scope="session")
-def api_schema(pytestconfig):
-    """Return api schema from backend"""
-    base_url = get_option_env(pytestconfig, "--api-base-url", "TEST_API_BASE_URL")
-    api_schema_url = "api/schema/"
-    return openapi.from_url(url= urljoin(base_url, api_schema_url))
+
+
 
 
 
