@@ -18,7 +18,7 @@ def api_schema(pytestconfig):
 
 
 @pytest.fixture(scope="session")
-def generate_pydentic_models(api_client):
+def generate_pydantic_models(api_client):
     """Generate pydentic models from api schema"""
     
     response = api_client.api_schema()
