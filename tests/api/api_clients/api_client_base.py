@@ -37,6 +37,8 @@ class ApiClient:
         else:
             self._session.headers.pop("Authorization", None)
 
+    def get_api_token(self):
+        return self._api_tokens['access']
     
     @skip_on_connection_error
     def _request(self, method: str, path: str, **kwargs) -> requests.Response:

@@ -30,6 +30,18 @@ def get_activation_token_from_email_body(recipient: str):
     # Return the captured token string
     return match.group(1)
 
+def get_password_reset_confirm_token_from_email_body(recipient: str):
+    email_body = get_email_text(recipient=recipient)
+
+    # 2. Match everything after 'activate/' until a space, quote, or closing bracket
+    pattern = r"password_reset_confirm/([^\s\"'>/]+)"
+    match = re.search(pattern, email_body)
+
+    assert match, f"Could not find activation URL pattern in email:\n{email_body}"
+
+    # Return the captured token string
+    return match.group(1)
+
 def get_url_from_email_body(recipient: str):
     email_body = get_email_text(recipient=recipient)
     pattern = r"https?://[^\s]+"

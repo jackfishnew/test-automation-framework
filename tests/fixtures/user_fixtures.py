@@ -68,7 +68,7 @@ def registered_user(api_client):
 
 
 @pytest.fixture(scope="function")
-def activated_user(api_client, registered_user, clean_mailpit):
+def activated_user(api_client, registered_user):
     """Activate a registered user - transitions from unactivated to activated state"""
     user_email = registered_user.get("email")
     # Get activation token from Email (Mailpit)
@@ -77,6 +77,12 @@ def activated_user(api_client, registered_user, clean_mailpit):
     assert response.status_code == 302, f"Failed to activate user: {response.text}"
     return registered_user
 
+@pytest.fixture(scope="function")
+def activated_user_reset_password(api_client, activated_user):
+    user_email = activated_user.get("email")
+    response = api_client.api_password_reset(user_email)
+    assert response.status_code == 200, f"Failed to reset password: {response.text}"
+    return activated_user
 
 @pytest.fixture(scope="function")
 def new_user_account(activated_user, auth_api_client_admin):
