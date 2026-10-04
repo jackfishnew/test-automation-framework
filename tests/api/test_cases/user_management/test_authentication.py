@@ -2,14 +2,49 @@ import pytest
 import allure
 from api.pydantic_models import ApiUserManagementTokenPostResponse, ApiUserManagementTokenPostResponse1, TokenRefresh
 from utility.assertions import assert_response
+from utility.emails import get_activation_token_from_email_body
+from api.custom_pydantic_models import ApiUserManagementActivate
+from api.constants import USER_MANAGMENT_ACTIVATE_MESSAGE
 
 @allure.epic("User Management")
 @allure.feature("Authentication")
 @pytest.mark.api  
-class TestTokenObtainUserManagement:
+class TestAuthenticationToken:
+
+    @allure.story("As a newly registered user, I want to click account activation,\
+                   so that my account is verified and activated")
+    def test_activate_token_valid_activation_token_returns_302(self, api_client, registered_user):
+        email = registered_user.get('email')
+        response = api_client.api_activate_user(get_activation_token_from_email_body(email))
+        response = assert_response(response, expected_status=302)
+        assert response is None
+
+
+    @allure.story("As a newly registered user, I want to click account activation,\
+                   so that my account is verified and activated and reuse of token is blocked")
+    def test_activate_token_reuse_token_returns_400(self, api_client, registered_user):
+        email = registered_user.get('email')
+        token = get_activation_token_from_email_body(email)
+        response = api_client.api_activate_user(token)
+        response = assert_response(response, expected_status=302)
+        assert response is None
+        response = api_client.api_activate_user(token)
+        response_parsed = assert_response(response, expected_status=400, schema=ApiUserManagementActivate)
+        assert response_parsed.error == USER_MANAGMENT_ACTIVATE_MESSAGE
+
+    @allure.story(
+        "As a Release Manager, "
+        "I want account activation with a malformed token to return an error, "
+        "so that I can ensure invalid requests are properly handled."
+    )
+    def test_activate_token_malformed_token_returns_400(self, api_client):
+        response = api_client.api_activate_user("malformed&_toekn")
+        response_parsed = assert_response(response, expected_status=400, schema=ApiUserManagementActivate)
+        assert response_parsed.error == USER_MANAGMENT_ACTIVATE_MESSAGE
+
 
     @allure.story("Obtain token with valid credentails. Endpoint returns 200")
-    def test_obtain_token_valid_credentials_returns_200(self, api_client, new_user_account):
+    def test_token_valid_credentials_returns_200(self, api_client, new_user_account):
         email = new_user_account.get("email")
         password = new_user_account.get("password")
         response = api_client.obtain_tokens(username=email, password=password)
@@ -28,15 +63,16 @@ class TestTokenObtainUserManagement:
         ],
         ids=["unknown-user", "bad-password"],
     )
-    def test_token_obtain_invalid_credentials_returns_401(self, api_client, username, password):
+    def test_token_invalid_credentials_returns_401(self, api_client, username, password):
         response = api_client.obtain_tokens(username=username, password=password)     
         parsed_response = assert_response(response, expected_status=401, schema=ApiUserManagementTokenPostResponse1)
         # Extract the expected text from the generated Pydantic model
         expected_text = ApiUserManagementTokenPostResponse1.model_fields['detail'].examples[0]
         assert expected_text in parsed_response.detail
 
+
     @allure.story("Generate refresh token with valid user credentails. Endpoint returns 200")
-    def test_refresh_token_valid_token_returns_200(self, api_client, new_user_account):
+    def test_token_refresh_valid_token_returns_200(self, api_client, new_user_account):
         email = new_user_account.get("email")
         password = new_user_account.get("password")
         obtain_response = api_client.obtain_tokens(username=email, password=password)

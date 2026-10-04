@@ -22,8 +22,14 @@ def assert_response(
         f"Response body: {response.text}"
     )
 
-    # Layer 2: Content-Type Header (skip for 204 No Content)
-    if expected_status != 204:
+    # Layer 2: 
+    if expected_status in (301, 302):
+        # Verify redirect location header is present
+        assert "Location" in response.headers, "Expected 'Location' header for redirect response"
+        
+
+    # Content-Type Header (skip for 204 No Content) 
+    elif expected_status != 204:
         content_type = response.headers.get("Content-Type", "")
         assert "application/json" in content_type, (
             f"Expected 'application/json' in header, got '{content_type}'"
