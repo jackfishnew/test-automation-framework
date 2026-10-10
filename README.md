@@ -95,7 +95,9 @@ The workflow creates a `.env` file automatically at runtime from these values, w
 
 To start the CI workflow, push a commit to a branch or open a pull request in the repository. GitHub Actions will automatically trigger the pipeline and execute the contract, API, UI, and load tests in sequence.
 
-## Environment Setup Local
+## Environment Setup
+
+This setup was tested locally on Ubuntu and GitHub Codespaces.
 
 Before starting, ensure the following tools are installed:
 
@@ -103,6 +105,11 @@ Before starting, ensure the following tools are installed:
 - Python 3.x
 - Node.js and npm
 - Git
+- Java JDK
+
+Use: ./scripts/setup_basic.sh
+
+Normally, when you add your user account to the docker group (using sudo usermod -aG docker $USER), you need to log out and log back in (or reboot) for the system to recognize your new permissions
 
 Create a `.env` file in the project root with the values required for local execution.
 
@@ -179,9 +186,10 @@ docker compose -f docker-compose-pull.yml pull
 docker compose -f docker-compose-pull.yml up -d
 ```
 
-### 2) Set up a Python virtual environment
+### 2) Set up a Python virtual environment and test depedencies
 
 ```bash
+sudo apt install python3.14-venv
 python3 -m venv tests/venv
 source tests/venv/bin/activate
 pip install --upgrade pip
@@ -232,6 +240,12 @@ Make sure your virtual environment is active before running the suite.
 pytest -m "contract or api or ui"
 ```
 
+### Run API Contract tests only
+
+```bash
+pytest -m "contract"
+```
+
 ### Run API tests only
 
 ```bash
@@ -251,7 +265,7 @@ Test results are stored in `tests/allure-report`.
 Install Allure CLI:
 
 ```bash
-npm install -g allure-commandline
+sudo npm install -g allure-commandline
 ```
 or use: __./scripts/install_allure.sh__
 
@@ -294,6 +308,7 @@ python -m bzt \
 
 ```bash
 apache-jmeter-5.6.3/bin/jmeter -g "tests/jmeter-report/kpi.jtl" -o tests/jmeter-report/html
+
 python3 -m http.server 8001 --directory ./tests/jmeter-report
 ```
 or use: __./scripts/report_jmeter.sh__
